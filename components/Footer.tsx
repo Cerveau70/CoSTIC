@@ -1,16 +1,37 @@
 import React, { useState } from 'react';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
-      console.log(`Newsletter subscription for: ${email}`);
-      setMessage('Merci pour votre inscription !');
+    if (!email) return;
+
+    setIsSubmitting(true);
+    setMessage('');
+
+    try {
+      // Sauvegarder l'email dans Firestore
+      await addDoc(collection(db, "newsletter_subscriptions"), {
+        email: email,
+        subscribedAt: serverTimestamp(),
+        source: 'website_footer'
+      });
+
+      setMessage('Merci pour votre inscription à notre newsletter !');
       setEmail('');
+      setTimeout(() => setMessage(''), 5000);
+
+    } catch (error) {
+      console.error('Erreur lors de l\'inscription à la newsletter:', error);
+      setMessage('Erreur lors de l\'inscription. Veuillez réessayer.');
       setTimeout(() => setMessage(''), 3000);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -33,16 +54,27 @@ const Footer: React.FC = () => {
             <p className="text-sm text-neutral-300 mb-4">Abonnez-vous à notre newsletter pour recevoir les dernières actualités.</p>
             <form onSubmit={handleNewsletterSubmit}>
               <div className="flex items-center">
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Votre adresse e-mail" 
+                  placeholder="Votre adresse e-mail"
                   className="bg-secondary/20 border-2 border-secondary/50 rounded-l-lg px-4 py-3 w-full text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition"
                   required
                 />
-                <button type="submit" className="bg-secondary text-white px-4 py-3 rounded-r-lg hover:bg-secondary/90 transition-colors duration-300 border-2 border-secondary">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-secondary text-white px-4 py-3 rounded-r-lg hover:bg-secondary/90 transition-colors duration-300 border-2 border-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? (
+                    <svg className="animate-spin h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                  )}
                 </button>
               </div>
               {message && <p className="text-green-400 text-sm mt-2">{message}</p>}
@@ -50,8 +82,8 @@ const Footer: React.FC = () => {
           </div>
         </div>
         <div className="mt-10 border-t border-white/20 pt-8 text-center text-sm">
-            <p>&copy; {new Date().getFullYear()} CoSTIC. Tous droits réservés.</p>
-            <p className="text-neutral-400">Conçu à Abidjan, Côte d'Ivoire.</p>
+          <p>&copy; {new Date().getFullYear()} CoSTIC. Tous droits réservés.</p>
+          <p className="text-neutral-400">Conçu à Abidjan, Côte d'Ivoire.</p>
         </div>
       </div>
     </footer>
