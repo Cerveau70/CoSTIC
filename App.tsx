@@ -3,6 +3,10 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Section from './components/Section';
 import TimelineItem from './components/TimelineItem';
+import ComiteCarousel from './components/ComiteCarousel';
+import PartenairesCarousel from './components/PartenairesCarousel';
+import BudgetAnimation from './components/BudgetAnimation';
+import ResultatsCarousel from './components/ResultatsCarousel';
 import { TimelineEvent } from './types';
 import { db, storage } from './firebase';
 import { collection, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
@@ -129,36 +133,6 @@ const conferenceThemes = [
   { title: 'Technologies éducatives et pédagogie numérique' },
 ];
 
-const targetAudience = [
-  {
-    title: 'Chercheurs & Académiques',
-    description: 'Enseignants-chercheurs et chercheurs en TIC.',
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-    )
-  },
-  {
-    title: 'Étudiants & Doctorants',
-    description: 'Doctorants et étudiants de Master en fin de cycle.',
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 14l9-5-9-5-9 5 9 5z" /><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222 4 2.222V20" /></svg>
-    )
-  },
-  {
-    title: 'Industrie & Entreprises',
-    description: 'Entreprises du secteur numérique et opérateurs télécoms.',
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
-    )
-  },
-  {
-    title: 'Décideurs & Partenaires',
-    description: 'Décideurs publics et partenaires au développement.',
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-    )
-  },
-];
 
 const budgetItems = [
   {
@@ -723,21 +697,55 @@ const App: React.FC = () => {
           </Section>
         </div>
 
-        {/* Participants Cibles Section */}
+        {/* Participants Cibles Section - Comité Scientifique */}
         <Section title="Participants Ciblés" className="bg-neutral-50">
-          <div className="max-w-5xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {targetAudience.map((participant, index) => (
-              <Animated key={participant.title} animationClass="animate-slide-in-bottom" delay={index * 100}>
-                <div className="bg-white h-full p-6 rounded-xl shadow-lg text-center transform hover:-translate-y-2 transition-transform duration-300 border-t-4 border-secondary hover:shadow-xl hover:border-primary">
-                  <div className="text-primary inline-block mb-4">
-                    {participant.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-primary mb-2 font-sans">{participant.title}</h3>
-                  <p className="text-neutral-500">{participant.description}</p>
+          <Animated animationClass="animate-slide-in-bottom">
+            <div className="mb-8 text-center">
+              <h3 className="text-2xl font-bold text-primary mb-4 font-sans">Comité Scientifique</h3>
+              <p className="text-lg text-neutral-600 max-w-3xl mx-auto">
+                Notre comité scientifique est composé d'experts reconnus dans le domaine des TIC
+                provenant des plus grandes universités d'Afrique de l'Ouest et du Canada.
+              </p>
+            </div>
+          </Animated>
+          <ComiteCarousel />
+
+          {/* Partenariats et Sponsoring */}
+          <Animated animationClass="animate-slide-in-bottom" delay={200}>
+            <div className="mt-16">
+              <div className="text-center mb-12">
+                <h3 className="text-2xl font-bold text-primary mb-4 font-sans">Partenariats et Sponsoring</h3>
+                <p className="text-lg text-neutral-600 max-w-3xl mx-auto">
+                  Nous sommes fiers de compter sur le soutien de partenaires institutionnels et du secteur privé
+                  pour faire de ce colloque un événement d'excellence.
+                </p>
+              </div>
+
+              <PartenairesCarousel />
+
+              {/* Détails des partenaires */}
+              <div className="mt-12 grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                <div className="text-center">
+                  <h5 className="font-bold text-neutral-800 mb-2 font-sans">Soutien Institutionnel</h5>
+                  <p className="text-sm text-neutral-600">
+                    Accompagnement dans l'organisation et la promotion du colloque
+                  </p>
                 </div>
-              </Animated>
-            ))}
-          </div>
+                <div className="text-center">
+                  <h5 className="font-bold text-neutral-800 mb-2 font-sans">Innovation Technologique</h5>
+                  <p className="text-sm text-neutral-600">
+                    Expertise technique et solutions technologiques pour l'événement
+                  </p>
+                </div>
+                <div className="text-center">
+                  <h5 className="font-bold text-neutral-800 mb-2 font-sans">Reconnaissance Internationale</h5>
+                  <p className="text-sm text-neutral-600">
+                    Validation scientifique et visibilité internationale
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Animated>
         </Section>
 
         {/* Timeline Section */}
@@ -759,21 +767,8 @@ const App: React.FC = () => {
               Ce budget est une estimation qui sera affinée en fonction des partenariats et des financements obtenus.
             </p>
           </Animated>
-          <div className="max-w-5xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {budgetItems.map((item, index) => (
-              <Animated key={item.title} animationClass="animate-slide-in-bottom" delay={index * 100}>
-                <div className="bg-white p-6 rounded-xl border border-neutral-200 flex items-start space-x-4 hover:shadow-xl hover:border-secondary transition-all duration-300 transform hover:scale-105">
-                  <div className="flex-shrink-0 bg-secondary/10 text-primary rounded-full p-3">
-                    {item.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-primary font-sans">{item.title}</h3>
-                    <p className="text-neutral-600">{item.details}</p>
-                  </div>
-                </div>
-              </Animated>
-            ))}
-          </div>
+
+          <BudgetAnimation />
         </Section>
 
         {/* Publications & Actes Section */}
@@ -809,23 +804,7 @@ const App: React.FC = () => {
 
         {/* Expected Outcomes Section */}
         <Section title="Résultats Attendus" className="bg-neutral-50">
-          <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 text-center">
-            {[
-              { title: "Partenariats Renforcés", desc: "Renforcement des collaborations académiques et industrielles.", icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg> },
-              { title: "Réseau d'Experts", desc: "Création d’un réseau de chercheurs et praticiens en TIC.", icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg> },
-              { title: "Recommandations Stratégiques", desc: "Propositions concrètes pour les décideurs publics et privés.", icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg> }
-            ].map((item, index) => (
-              <Animated key={item.title} animationClass="animate-slide-in-bottom" delay={index * 150}>
-                <div className="bg-neutral-100 p-8 rounded-xl border border-neutral-200 hover:bg-white transition-colors duration-300 h-full">
-                  <div className="flex justify-center items-center mb-4 text-primary">
-                    {item.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-primary mb-2 font-sans">{item.title}</h3>
-                  <p className="text-neutral-700">{item.desc}</p>
-                </div>
-              </Animated>
-            ))}
-          </div>
+          <ResultatsCarousel />
         </Section>
 
       </main>

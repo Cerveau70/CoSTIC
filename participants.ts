@@ -1,0 +1,16 @@
+export const targetAudience = [
+  { name: "Pr. Oumtanaga Souleymane", affiliation: "INPHB, Côte d’Ivoire", photo: "/public/img/oumtanaga.jpg" },
+  { name: "Dr (MC) Diaby Moustapha", affiliation: "ESATIC, Côte d’Ivoire", photo: "/images/participants/diaby.jpg" },
+  { name: "Dr. Diarra Mamadou", affiliation: "UFHB, Côte d’Ivoire", photo: "/images/participants/diarra.jpg" },
+  { name: "Dr. Kamagaté Beman", affiliation: "ESATIC, Côte d’Ivoire", photo: "/images/participants/kamagate.jpg" },
+  { name: "Dr. Kouakou Konan", affiliation: "UVCI, Côte d’Ivoire", photo: "/images/participants/kouakou.jpg" },
+  { name: "Pr. Kouadio N’Guessan", affiliation: "Université Nangui Abrogoua, Côte d’Ivoire", photo: "/images/participants/kouadio.jpg" },
+  { name: "Dr. Konaté Moussa", affiliation: "Université de San Pedro, Côte d’Ivoire", photo: "/images/participants/konate.jpg" },
+  { name: "Pr. Abdoulaye Cissé", affiliation: "Université Nazi Boni, Burkina Faso", photo: "/images/participants/cisse.jpg" },
+  { name: "Dr. Kaboré Lassina", affiliation: "Université Joseph Ki-Zerbo, Burkina Faso", photo: "/images/participants/kabore.jpg" },
+  { name: "Dr. Seydou Traoré", affiliation: "USTTB, Mali", photo: "/images/participants/traore.jpg" },
+  { name: "Pr. Alioune Ngom", affiliation: "Université Gaston Berger, Sénégal", photo: "/images/participants/ngom.jpg" },
+  { name: "Dr. Aminata Fall", affiliation: "UCAD, Sénégal", photo: "/images/participants/fall.jpg" },
+  { name: "Dr. Fatoumata Diallo", affiliation: "Université de Conakry, Guinée", photo: "/images/participants/diallo.jpg" },
+  { name: "Pr. Hamadou Saliah-Hassane", affiliation: "UQAM, Niger/Canada", photo: "/images/participants/saliah.jpg" },
+];
