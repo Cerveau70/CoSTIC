@@ -44,7 +44,7 @@ const Header: React.FC = () => {
             S'inscrire
           </a>
           <a href="/admin" className="text-neutral-300 hover:text-white text-sm transition-colors duration-300">
-            Admin
+            Espace Administrateur
           </a>
         </nav>
         <div className="md:hidden flex items-center">

@@ -10,6 +10,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { usePaystackPayment } from 'react-paystack';
 
 
+
 // Custom Hook for observing intersection
 const useIntersectionObserver = (options: IntersectionObserverInit) => {
   const [entry, setEntry] = useState<IntersectionObserverEntry | null>(null);
