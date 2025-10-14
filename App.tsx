@@ -5,13 +5,16 @@ import Section from './components/Section';
 import TimelineItem from './components/TimelineItem';
 import ComiteCarousel from './components/ComiteCarousel';
 import PartenairesCarousel from './components/PartenairesCarousel';
-import BudgetAnimation from './components/BudgetAnimation';
 import ResultatsCarousel from './components/ResultatsCarousel';
+import SocialMediaSticky from './components/SocialMediaSticky';
+import PartenaireForm from './components/PartenaireForm';
+import { partenairesDefaut } from './config/partenaires';
 import { TimelineEvent } from './types';
 import { db, storage } from './firebase';
 import { collection, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { usePaystackPayment } from 'react-paystack';
+import './styles/global.css';
 
 
 
@@ -356,21 +359,138 @@ const App: React.FC = () => {
   return (
     <div className="bg-neutral-100 font-body">
       <Header />
+      <SocialMediaSticky />
       <main>
         {/* Hero Section */}
         <section id="accueil" className="relative text-white pt-32 pb-24 text-center overflow-hidden flex flex-col items-center justify-center min-h-screen">
           <div className="absolute inset-0 hero-bg"></div>
-          <div className="absolute inset-0 bg-primary/70"></div>
+          <div className="absolute inset-0 bg-primary/40"></div>
+          <div className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40" style={{ backgroundImage: "url('/img/arr.png')" }}></div>
           <div className="container mx-auto px-6 relative z-10">
 
-            <h1 className="text-6xl md:text-8xl font-extrabold leading-tight mb-4 animate-fade-in-up font-sans" style={{ animationDelay: '0.1s' }}>CoSTIC 2026</h1>
-            <p className="text-xl md:text-2xl text-neutral-200 mb-6 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>Colloque Scientifique sur les Technologies de l'Information et de la Communication</p>
+            {/* Partenaires Logos - Défilement simple vers la droite */}
+            <div className="mb-8 animate-fade-in-up overflow-hidden" style={{ animationDelay: '0.1s' }}>
+              <div className="flex animate-scroll-universities space-x-12">
+                {/* Dupliquer les partenaires pour un défilement continu */}
+                {[...partenairesDefaut, ...partenairesDefaut].map((partenaire, index) => (
+                  <div
+                    key={`${partenaire.name}-${index}`}
+                    className="flex-shrink-0 group"
+                  >
+                    {/* Logo simple et fixe */}
+                    <div className="w-20 h-20 bg-white rounded-lg shadow-lg flex items-center justify-center transition-all duration-300 hover:shadow-xl hover:scale-105 border border-gray-100">
+                      <img
+                        src={partenaire.logo}
+                        alt={`Logo ${partenaire.name}`}
+                        className="max-w-16 max-h-16 object-contain transition-all duration-300 group-hover:scale-110"
+                        onError={(e) => {
+                          // Fallback simple et propre
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const parent = target.parentElement;
+                          if (parent) {
+                            parent.innerHTML = `
+                              <div class="w-full h-full flex items-center justify-center">
+                                <div class="text-gray-600 font-bold text-sm text-center leading-tight">
+                                  ${partenaire.name.split(' ').map(word => word.charAt(0)).join('')}
+                                </div>
+                              </div>
+                            `;
+                          }
+                        }}
+                      />
+                    </div>
 
-            <div className="flex justify-center items-center space-x-6 text-neutral-100 mb-8 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+                    {/* Nom de l'université - discret */}
+                    <div className="mt-2 text-center">
+                      <span className="text-xs text-white/90 font-medium leading-tight block max-w-20">
+                        {partenaire.name}
+                      </span>
+                      <span className="text-xs text-white/70 block mt-1">
+                        {partenaire.pays}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <h1 className="text-6xl md:text-8xl font-black leading-tight mb-4 animate-fade-in-up relative" style={{ animationDelay: '0.7s' }}>
+              {/* Style 3D Blanc */}
+              <div className="relative inline-block">
+                {/* Texte principal blanc */}
+                <div className="relative text-white"
+                  style={{
+                    fontFamily: 'Arial Black, sans-serif',
+                    letterSpacing: '2px',
+                    transform: 'perspective(500px) rotateX(5deg)',
+                    textShadow: '0 0 0px transparent'
+                  }}>
+                  CoSTIC 2026
+                </div>
+
+                {/* Effet 3D blanc en bas */}
+                <div className="absolute inset-0 text-white/60 transform translate-x-2 translate-y-2"
+                  style={{
+                    fontFamily: 'Arial Black, sans-serif',
+                    letterSpacing: '2px',
+                    transform: 'perspective(500px) rotateX(5deg) translateX(2px) translateY(2px)'
+                  }}>
+                  CoSTIC 2026
+                </div>
+
+                {/* Effet 3D blanc plus profond */}
+                <div className="absolute inset-0 text-white/40 transform translate-x-4 translate-y-4"
+                  style={{
+                    fontFamily: 'Arial Black, sans-serif',
+                    letterSpacing: '2px',
+                    transform: 'perspective(500px) rotateX(5deg) translateX(4px) translateY(4px)'
+                  }}>
+                  CoSTIC 2026
+                </div>
+
+                {/* Effet 3D blanc le plus profond */}
+                <div className="absolute inset-0 text-white/20 transform translate-x-6 translate-y-6"
+                  style={{
+                    fontFamily: 'Arial Black, sans-serif',
+                    letterSpacing: '2px',
+                    transform: 'perspective(500px) rotateX(5deg) translateX(6px) translateY(6px)'
+                  }}>
+                  CoSTIC 2026
+                </div>
+              </div>
+            </h1>
+            <p className="text-xl md:text-2xl text-neutral-200 mb-6 animate-fade-in-up" style={{ animationDelay: '0.8s' }}>Colloque Scientifique sur les Technologies de l'Information et de la Communication</p>
+
+            <div className="flex justify-center items-center space-x-6 text-neutral-100 mb-8 animate-fade-in-up" style={{ animationDelay: '0.9s' }}>
               <span className="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>Mai 2026</span>
               <span className="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>Abidjan, Côte d'Ivoire</span>
             </div>
-            <p className="text-lg text-neutral-200 mb-12 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>Organisé par l'ESATIC</p>
+
+            {/* ESATIC Stylisé */}
+            <div className="mb-12 animate-fade-in-up" style={{ animationDelay: '1.0s' }}>
+              <div className="relative inline-block">
+                {/* Effet de halo bleu */}
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-500 rounded-full blur-xl opacity-40"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-400/30 via-blue-500/30 to-blue-400/30 rounded-full blur-lg opacity-60"></div>
+
+                {/* Texte principal */}
+                <div className="relative">
+                  <p className="text-2xl md:text-3xl font-bold tracking-wider">
+                    <span className="bg-gradient-to-r from-blue-400 via-white to-blue-500 bg-clip-text text-transparent">
+                      Organisé par l'
+                    </span>
+                    <span className="text-white font-extrabold relative">
+                      ESATIC
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-500 opacity-20 blur-sm"></div>
+                    </span>
+                  </p>
+                </div>
+
+                {/* Ligne décorative bleue */}
+                <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent rounded-full"></div>
+              </div>
+            </div>
 
             <div className="mb-12 animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
               <CountdownTimer />
@@ -382,6 +502,9 @@ const App: React.FC = () => {
               </a>
               <a href="#inscription" className="bg-white text-primary font-bold py-4 px-10 rounded-full hover:bg-neutral-200 transition-all duration-300 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 font-sans w-full sm:w-auto">
                 S'inscrire maintenant
+              </a>
+              <a href="#partenariat" className="bg-secondary text-white font-bold py-4 px-10 rounded-full hover:bg-secondary/90 transition-all duration-300 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 font-sans w-full sm:w-auto">
+                Devenir Partenaire
               </a>
             </div>
           </div>
@@ -477,7 +600,7 @@ const App: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-primary font-sans">Date</h3>
-                    <p className="text-lg text-neutral-600">Mai 2026</p>
+                    <p className="text-lg text-neutral-600">Mai 2026 (ESATIC – Abidjan)</p>
                   </div>
                 </div>
                 <div className="flex items-center">
@@ -532,7 +655,6 @@ const App: React.FC = () => {
                     'Favoriser la collaboration interuniversitaire et avec le secteur privé.',
                     'Mettre en avant les jeunes chercheurs (Masters, Doctorants).',
                     'Promouvoir les TIC comme leviers du développement durable.',
-                    'Renforcer la visibilité de l’ESATIC dans l’espace scientifique international.',
                   ].map((obj, index) => (
                     <Animated key={obj} animationClass="animate-slide-in-right" delay={150 + index * 100}>
                       <li className="flex items-start">
@@ -698,55 +820,57 @@ const App: React.FC = () => {
         </div>
 
         {/* Participants Cibles Section - Comité Scientifique */}
-        <Section title="Participants Ciblés" className="bg-neutral-50">
-          <Animated animationClass="animate-slide-in-bottom">
-            <div className="mb-8 text-center">
-              <h3 className="text-2xl font-bold text-primary mb-4 font-sans">Comité Scientifique</h3>
-              <p className="text-lg text-neutral-600 max-w-3xl mx-auto">
-                Notre comité scientifique est composé d'experts reconnus dans le domaine des TIC
-                provenant des plus grandes universités d'Afrique de l'Ouest et du Canada.
-              </p>
-            </div>
-          </Animated>
-          <ComiteCarousel />
-
-          {/* Partenariats et Sponsoring */}
-          <Animated animationClass="animate-slide-in-bottom" delay={200}>
-            <div className="mt-16">
-              <div className="text-center mb-12">
-                <h3 className="text-2xl font-bold text-primary mb-4 font-sans">Partenariats et Sponsoring</h3>
+        <div id="comite-scientifique">
+          <Section title="Participants Ciblés" className="bg-neutral-50">
+            <Animated animationClass="animate-slide-in-bottom">
+              <div className="mb-8 text-center">
+                <h3 className="text-2xl font-bold text-primary mb-4 font-sans">Comité Scientifique</h3>
                 <p className="text-lg text-neutral-600 max-w-3xl mx-auto">
-                  Nous sommes fiers de compter sur le soutien de partenaires institutionnels et du secteur privé
-                  pour faire de ce colloque un événement d'excellence.
+                  Notre comité scientifique est composé d'experts reconnus dans le domaine des TIC
+                  provenant des plus grandes universités d'Afrique de l'Ouest et du Canada.
                 </p>
               </div>
+            </Animated>
+            <ComiteCarousel />
 
-              <PartenairesCarousel />
-
-              {/* Détails des partenaires */}
-              <div className="mt-12 grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                <div className="text-center">
-                  <h5 className="font-bold text-neutral-800 mb-2 font-sans">Soutien Institutionnel</h5>
-                  <p className="text-sm text-neutral-600">
-                    Accompagnement dans l'organisation et la promotion du colloque
+            {/* Partenariats et Sponsoring */}
+            <Animated animationClass="animate-slide-in-bottom" delay={200}>
+              <div className="mt-16">
+                <div className="text-center mb-12">
+                  <h3 className="text-2xl font-bold text-primary mb-4 font-sans">Partenariats et Sponsoring</h3>
+                  <p className="text-lg text-neutral-600 max-w-3xl mx-auto">
+                    Nous sommes fiers de compter sur le soutien de partenaires institutionnels et du secteur privé
+                    pour faire de ce colloque un événement d'excellence.
                   </p>
                 </div>
-                <div className="text-center">
-                  <h5 className="font-bold text-neutral-800 mb-2 font-sans">Innovation Technologique</h5>
-                  <p className="text-sm text-neutral-600">
-                    Expertise technique et solutions technologiques pour l'événement
-                  </p>
-                </div>
-                <div className="text-center">
-                  <h5 className="font-bold text-neutral-800 mb-2 font-sans">Reconnaissance Internationale</h5>
-                  <p className="text-sm text-neutral-600">
-                    Validation scientifique et visibilité internationale
-                  </p>
+
+                <PartenairesCarousel />
+
+                {/* Détails des partenaires */}
+                <div className="mt-12 grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                  <div className="text-center">
+                    <h5 className="font-bold text-neutral-800 mb-2 font-sans">Soutien Institutionnel</h5>
+                    <p className="text-sm text-neutral-600">
+                      Accompagnement dans l'organisation et la promotion du colloque
+                    </p>
+                  </div>
+                  <div className="text-center">
+                    <h5 className="font-bold text-neutral-800 mb-2 font-sans">Innovation Technologique</h5>
+                    <p className="text-sm text-neutral-600">
+                      Expertise technique et solutions technologiques pour l'événement
+                    </p>
+                  </div>
+                  <div className="text-center">
+                    <h5 className="font-bold text-neutral-800 mb-2 font-sans">Reconnaissance Internationale</h5>
+                    <p className="text-sm text-neutral-600">
+                      Validation scientifique et visibilité internationale
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </Animated>
-        </Section>
+            </Animated>
+          </Section>
+        </div>
 
         {/* Timeline Section */}
         <Section title="Calendrier prévisionnel">
@@ -760,16 +884,6 @@ const App: React.FC = () => {
           </div>
         </Section>
 
-        {/* Budget Prévisionnel Section */}
-        <Section title="Budget Prévisionnel" className="bg-neutral-50">
-          <Animated animationClass="animate-slide-in-bottom">
-            <p className="text-center text-lg text-neutral-600 -mt-8 mb-12 max-w-2xl mx-auto">
-              Ce budget est une estimation qui sera affinée en fonction des partenariats et des financements obtenus.
-            </p>
-          </Animated>
-
-          <BudgetAnimation />
-        </Section>
 
         {/* Publications & Actes Section */}
         <Section title="Publications & Actes">
@@ -806,6 +920,13 @@ const App: React.FC = () => {
         <Section title="Résultats Attendus" className="bg-neutral-50">
           <ResultatsCarousel />
         </Section>
+
+        {/* Partenariat Section */}
+        <div id="partenariat">
+          <Section title="Devenir Partenaire" className="bg-white">
+            <PartenaireForm />
+          </Section>
+        </div>
 
       </main>
       <Footer />

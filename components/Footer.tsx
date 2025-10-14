@@ -40,7 +40,51 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-6 py-12">
         <div className="grid md:grid-cols-3 gap-10">
           <div className="mb-6 md:mb-0">
-            <h3 className="text-xl font-bold mb-2 text-white font-sans">CoSTIC 2026</h3>
+            <h3 className="text-xl font-black mb-2 relative" style={{ letterSpacing: '1px' }}>
+              {/* Style 3D Blanc pour Footer */}
+              <div className="relative inline-block">
+                {/* Texte principal blanc */}
+                <div className="relative text-white"
+                  style={{
+                    fontFamily: 'Arial Black, sans-serif',
+                    letterSpacing: '1px',
+                    transform: 'perspective(300px) rotateX(3deg)',
+                    textShadow: '0 0 0px transparent'
+                  }}>
+                  CoSTIC 2026
+                </div>
+
+                {/* Effet 3D blanc en bas */}
+                <div className="absolute inset-0 text-white/60 transform translate-x-1 translate-y-1"
+                  style={{
+                    fontFamily: 'Arial Black, sans-serif',
+                    letterSpacing: '1px',
+                    transform: 'perspective(300px) rotateX(3deg) translateX(1px) translateY(1px)'
+                  }}>
+                  CoSTIC 2026
+                </div>
+
+                {/* Effet 3D blanc plus profond */}
+                <div className="absolute inset-0 text-white/40 transform translate-x-2 translate-y-2"
+                  style={{
+                    fontFamily: 'Arial Black, sans-serif',
+                    letterSpacing: '1px',
+                    transform: 'perspective(300px) rotateX(3deg) translateX(2px) translateY(2px)'
+                  }}>
+                  CoSTIC 2026
+                </div>
+
+                {/* Effet 3D blanc le plus profond */}
+                <div className="absolute inset-0 text-white/20 transform translate-x-3 translate-y-3"
+                  style={{
+                    fontFamily: 'Arial Black, sans-serif',
+                    letterSpacing: '1px',
+                    transform: 'perspective(300px) rotateX(3deg) translateX(3px) translateY(3px)'
+                  }}>
+                  CoSTIC 2026
+                </div>
+              </div>
+            </h3>
             <p className="text-sm text-neutral-300">Organisé par l'École Supérieure Africaine des TIC (ESATIC)</p>
           </div>
           <div className="text-sm">
@@ -81,9 +125,7 @@ const Footer: React.FC = () => {
             </form>
           </div>
         </div>
-        <div className="mt-10 border-t border-white/20 pt-8 text-center text-sm">
-          <p>&copy; {new Date().getFullYear()} CoSTIC. Tous droits réservés.</p>
-          <p className="text-neutral-400">Conçu à Abidjan, Côte d'Ivoire.</p>
+        <div className="mt-10 border-t border-white/20 pt-8">
         </div>
       </div>
     </footer>

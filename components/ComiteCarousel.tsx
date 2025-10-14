@@ -125,57 +125,17 @@ const comiteScientifique: ComiteMember[] = [
 ];
 
 const ComiteCarousel: React.FC = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsPerPage = 4;
-
-  const totalPages = Math.ceil(comiteScientifique.length / itemsPerPage);
-
-  const goToPrevious = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? totalPages - 1 : prevIndex - 1
-    );
-  };
-
-  const goToNext = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === totalPages - 1 ? 0 : prevIndex + 1
-    );
-  };
-
-  const currentItems = comiteScientifique.slice(
-    currentIndex * itemsPerPage,
-    (currentIndex + 1) * itemsPerPage
-  );
+  // Dupliquer les membres pour un défilement continu
+  const duplicatedMembers = [...comiteScientifique, ...comiteScientifique];
 
   return (
-    <div className="relative max-w-7xl mx-auto">
-      {/* Navigation Buttons */}
-      <button
-        onClick={goToPrevious}
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-primary hover:text-white"
-        aria-label="Précédent"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-
-      <button
-        onClick={goToNext}
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-primary hover:text-white"
-        aria-label="Suivant"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
-
-      {/* Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-12">
-        {currentItems.map((member, index) => (
+    <div className="relative max-w-7xl mx-auto overflow-hidden">
+      {/* Défilement continu vers la droite */}
+      <div className="flex animate-scroll space-x-8">
+        {duplicatedMembers.map((member, index) => (
           <div
-            key={member.nom}
-            className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 p-6 text-center"
+            key={`${member.nom}-${index}`}
+            className="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 p-6 text-center"
           >
             {/* Photo */}
             <div className="relative mb-4">
@@ -209,26 +169,6 @@ const ComiteCarousel: React.FC = () => {
             </p>
           </div>
         ))}
-      </div>
-
-      {/* Pagination Indicators */}
-      <div className="flex justify-center mt-8 space-x-2">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentIndex
-              ? 'bg-primary scale-125'
-              : 'bg-neutral-300 hover:bg-primary/50'
-              }`}
-            aria-label={`Page ${index + 1}`}
-          />
-        ))}
-      </div>
-
-      {/* Page Info */}
-      <div className="text-center mt-4 text-sm text-neutral-500">
-        Page {currentIndex + 1} sur {totalPages} • {comiteScientifique.length} membres du comité
       </div>
     </div>
   );

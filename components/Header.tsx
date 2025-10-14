@@ -20,9 +20,9 @@ const Header: React.FC = () => {
       icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
     },
     {
-      name: 'Inscription',
-      href: '#inscription',
-      icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 012-2h3a2 2 0 012 2v3a2 2 0 01-2 2H7a2 2 0 01-2-2V5zM5 14a2 2 0 012-2h3a2 2 0 012 2v3a2 2 0 01-2 2H7a2 2 0 01-2-2v-3z" /></svg>
+      name: 'Comité Scientifique',
+      href: '#comite-scientifique',
+      icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
     },
   ];
 
@@ -40,19 +40,13 @@ const Header: React.FC = () => {
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 ease-out"></span>
             </a>
           ))}
-          <a href="#inscription" className="bg-accent text-white font-bold py-2 px-6 rounded-full hover:bg-accent/90 transition-all duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
-            S'inscrire
-          </a>
           <a href="/admin" className="text-neutral-300 hover:text-white text-sm transition-colors duration-300">
             Espace Administrateur
           </a>
         </nav>
         <div className="md:hidden flex items-center">
-          <a href="#inscription" className="bg-accent text-white font-semibold py-2 px-4 rounded-full text-sm mr-4">
-            S'inscrire
-          </a>
           <a href="/admin" className="text-neutral-300 hover:text-white text-sm mr-4">
-            Admin
+            Espace Administrateur
           </a>
           <button onClick={() => setIsOpen(!isOpen)} className="text-white focus:outline-none" aria-label="Ouvrir le menu">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

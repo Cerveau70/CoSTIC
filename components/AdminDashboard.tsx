@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../firebase';
+import AdminPartenaires from './AdminPartenaires';
 
 interface Submission {
   id: string;
@@ -29,7 +30,7 @@ interface Registration {
 }
 
 const AdminDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'submissions' | 'participants'>('submissions');
+  const [activeTab, setActiveTab] = useState<'submissions' | 'participants' | 'partenaires'>('submissions');
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [participants, setParticipants] = useState<Registration[]>([]);
   const [loading, setLoading] = useState(true);
@@ -147,8 +148,8 @@ const AdminDashboard: React.FC = () => {
             <button
               onClick={() => setActiveTab('submissions')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'submissions'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300'
                 }`}
             >
               Articles Soumis ({submissions.length})
@@ -156,11 +157,20 @@ const AdminDashboard: React.FC = () => {
             <button
               onClick={() => setActiveTab('participants')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'participants'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300'
                 }`}
             >
               Participants ({participants.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('partenaires')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'partenaires'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300'
+                }`}
+            >
+              Partenaires
             </button>
           </nav>
         </div>
@@ -263,8 +273,8 @@ const AdminDashboard: React.FC = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${participant.participantType === 'etudiant'
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-blue-100 text-blue-800'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-blue-100 text-blue-800'
                             }`}>
                             {participant.participantType === 'etudiant' ? 'Étudiant' : 'Chercheur'}
                           </span>
@@ -292,6 +302,10 @@ const AdminDashboard: React.FC = () => {
                 )}
               </div>
             </div>
+          )}
+
+          {activeTab === 'partenaires' && (
+            <AdminPartenaires />
           )}
         </div>
       </div>

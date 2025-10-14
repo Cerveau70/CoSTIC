@@ -9,23 +9,58 @@ interface Partenaire {
 }
 
 const partenaires: Partenaire[] = [
-  // Ministère et Institutions
-  // {
-  //   nom: "Ministère de l'Enseignement Supérieur et de la Recherche",
-  //   description: "Partenaire Institutionnel",
-  //   logo: "/img/Ministère de l'Enseignement Supérieur et de la Recherche.jpg",
-  //   type: "Institutionnel",
-  //   site: "https://www.enseignement.gouv.ci"
-  // },
-  // {
-  //   nom: "ESATIC",
-  //   description: "École Supérieure Africaine des TIC",
-  //   logo: "/img/École Supérieure Africaine des TIC.png",
-  //   type: "Institutionnel",
-  //   site: "https://www.esatic.edu.ci"
-  // },
+  // Ministères et Institutions
+  {
+    nom: "MESRS",
+    description: "Ministère de l'Enseignement Supérieur et de la Recherche Scientifique",
+    logo: "/img/mesrs.png",
+    type: "Institutionnel",
+    site: "https://www.enseignement.gouv.ci"
+  },
+  {
+    nom: "ARTCI",
+    description: "Autorité de Régulation des Télécommunications/TIC",
+    logo: "/img/artci.png",
+    type: "Régulation",
+    site: "https://www.artci.ci"
+  },
+  {
+    nom: "ANSUT",
+    description: "Agence Nationale du Service Universel des Télécommunications",
+    logo: "/img/an.png",
+    type: "Institutionnel",
+    site: "https://ansut.ci"
+  },
+  // Organisations Internationales
+  {
+    nom: "AUF",
+    description: "Agence Universitaire de la Francophonie",
+    logo: "/img/AUF - Agence Universitaire de la Francophonie.png",
+    type: "International",
+    site: "https://www.auf.org"
+  },
+  {
+    nom: "EAI",
+    description: "European Alliance for Innovation",
+    logo: "/img/EAI - European Alliance for Innovation.png",
+    type: "International",
+    site: "https://eai.eu"
+  },
 
-  // Opérateurs Télécoms
+  {
+    nom: "UNESCO",
+    description: "Organisation des Nations Unies pour l'Éducation",
+    logo: "/img/unesco.png",
+    type: "International",
+    site: "https://www.unesco.org"
+  },
+  {
+    nom: "BAD",
+    description: "Banque Africaine de Développement",
+    logo: "/img/bad.jpg",
+    type: "Finance",
+    site: "https://www.afdb.org"
+  },
   {
     nom: "Orange Côte d'Ivoire",
     description: "Opérateur Télécoms",
@@ -33,106 +68,225 @@ const partenaires: Partenaire[] = [
     type: "Télécoms",
     site: "https://www.orange.ci"
   },
-  // {
-  //   nom: "Moov Africa Côte d'Ivoire",
-  //   description: "Opérateur Télécoms",
-  //   logo: "/img/Moov Africa Côte d'Ivoire.jpg",
-  //   type: "Télécoms",
-  //   site: "https://www.moov.ci"
-  // },
-  // {
-  //   nom: "MTN Côte d'Ivoire",
-  //   description: "Opérateur Télécoms",
-  //   logo: "/img/MTN Côte d'Ivoire.png",
-  //   type: "Télécoms",
-  //   site: "https://www.mtn.ci"
-  // },
-
-  // // Banques
-  // {
-  //   nom: "SGBCI",
-  //   description: "Société Générale de Banques en Côte d'Ivoire",
-  //   logo: "/img/Société Générale de Banques en Côte d'Ivoire.png",
-  //   type: "Banque",
-  //   site: "https://www.sgbci.ci"
-  // },
-  // {
-  //   nom: "Ecobank Côte d'Ivoire",
-  //   description: "Banque Panafricaine",
-  //   logo: "/img/Ecobank Côte d'Ivoire.jpg",
-  //   type: "Banque",
-  //   site: "https://www.ecobank.com"
-  // },
-  // {
-  //   nom: "UBA Côte d'Ivoire",
-  //   description: "United Bank for Africa",
-  //   logo: "/img/UBA Côte d'Ivoire.png",
-  //   type: "Banque",
-  //   site: "https://www.ubagroup.com"
-  // },
-
-  // Start-ups et Incubateurs
+  // Grandes Technologies
   {
-    nom: "VITIB",
-    description: "Incubateur et Accélérateur",
-    logo: "/img/vitib.jpg",
-    type: "Parc Technologique",
-    site: "https://www.vitib.ci/"
+    nom: "Huawei",
+    description: "Technologies et Solutions TIC",
+    logo: "/img/huawei.png",
+    type: "Technologie",
+    site: "https://www.huawei.com"
+  },
+  {
+    nom: "MTN Côte d'Ivoire",
+    description: "Opérateur Télécoms",
+    logo: "/img/mtn.png",
+    type: "Télécoms",
+    site: "https://www.mtn.ci"
+  },
+  {
+    nom: "Microsoft",
+    description: "Technologies et Solutions Numériques",
+    logo: "/img/microsoft.png",
+    type: "Technologie",
+    site: "https://www.microsoft.com"
+  },
+  // Médias
+  {
+    nom: "RTI",
+    description: "Radiodiffusion Télévision Ivoirienne",
+    logo: "/img/rti.png",
+    type: "Média",
+    site: "https://www.rti.ci"
+  },
+  {
+    nom: "Fraternité Matin",
+    description: "Journal Quotidien",
+    logo: "/img/fm.png",
+    type: "Média",
+    site: "https://www.fratmat.info"
+  },
+  {
+    nom: "Ministère de la Communication et de l'Économie Numérique",
+    description: "Ministère de la Communication",
+    logo: "/img/ministere-communication.png",
+    type: "Institutionnel",
+    site: "https://www.communication.gouv.ci"
+  },
+  {
+    nom: "SNDI",
+    description: "Société Nationale de Développement Informatique",
+    logo: "/img/sndi.png",
+    type: "Développement",
+    site: "https://www.sndi.ci"
+  },
+  // Organisations de Développement
+  {
+    nom: "GIZ",
+    description: "Coopération Allemande",
+    logo: "/img/giz.png",
+    type: "Développement",
+    site: "https://www.giz.de"
+  },
+  {
+    nom: "AFD",
+    description: "Agence Française de Développement",
+    logo: "/img/afd.png",
+    type: "Développement",
+    site: "https://www.afd.fr"
+  },
+  {
+    nom: "Banque Mondiale",
+    description: "Institution Financière Internationale",
+    logo: "/img/bm.png",
+    type: "Finance",
+    site: "https://www.banquemondiale.org"
   },
 
-  // Organisations Internationales
+
+  // Opérateurs Télécoms
+
   {
-    nom: "EAI - European Alliance for Innovation",
-    description: "Organisation Scientifique Internationale",
-    logo: "/img/EAI - European Alliance for Innovation.png",
-    type: "International",
-    site: "https://eai.eu"
+    nom: "Moov Africa Côte d'Ivoire",
+    description: "Opérateur Télécoms",
+    logo: "/img/moov.png",
+    type: "Télécoms",
+    site: "https://www.moov.ci"
+  },
+
+  // Entreprises Technologiques
+  {
+    nom: "NSIA Technologies",
+    description: "Solutions Technologiques",
+    logo: "/img/nsia.jpg",
+    type: "Technologie",
+    site: "https://www.nsia-technologies.com"
   },
   {
-    nom: "IEEE - Institute of Electrical and Electronics Engineers",
-    description: "Association Professionnelle Mondiale",
-    logo: "/img/IEEE - Institute of Electrical and Electronics Engineers.png",
-    type: "International",
-    site: "https://www.ieee.org"
+    nom: "CIE/CI-ÉNERGIES",
+    description: "Compagnie Ivoirienne d'Électricité",
+    logo: "/img/cie.png",
+    type: "Énergie",
+    site: "https://www.cie.ci"
   },
   {
-    nom: "AUF - Agence Universitaire de la Francophonie",
-    description: "Réseau Universitaire Francophone",
-    logo: "/img/AUF - Agence Universitaire de la Francophonie.png",
-    type: "International",
-    site: "https://www.auf.org"
+    nom: "CGECI",
+    description: "Confédération Générale des Entreprises de Côte d'Ivoire",
+    logo: "/img/cgeci.png",
+    type: "Institutionnel",
+    site: "https://www.cgeci.ci"
   },
-  // {
-  //   nom: "UNESCO",
-  //   description: "Organisation des Nations Unies pour l'Éducation",
-  //   logo: "/img/Organisation des Nations Unies pour l'Éducation.png",
-  //   type: "International",
-  //   site: "https://www.unesco.org"
-  // }
+
+  // Consultants et Formations
+  {
+    nom: "AS Consulting",
+    description: "Cabinet de Conseil",
+    logo: "/img/as.jpg",
+    type: "Conseil",
+    site: "https://www.as-consulting.ci"
+  },
+  {
+    nom: "DATUM Academy",
+    description: "Centre de Formation",
+    logo: "/img/da.png",
+    type: "Formation",
+    site: "https://www.datum-academy.com"
+  },
+  {
+    nom: "SICOGES",
+    description: "Société de Conseil et de Gestion",
+    logo: "/img/sicoges.png",
+    type: "Conseil",
+    site: "https://www.sicoges.ci"
+  },
+  {
+    nom: "SIMPLON CI",
+    description: "École du Numérique",
+    logo: "/img/simplon.png",
+    type: "Formation",
+    site: "https://www.simplon.ci"
+  },
+
+
+  {
+    nom: "Google Africa",
+    description: "Solutions Numériques",
+    logo: "/img/ga.jpg",
+    type: "Technologie",
+    site: "https://www.google.com"
+  },
+  {
+    nom: "IBM Research Africa",
+    description: "Recherche et Innovation",
+    logo: "/img/ibm.jpg",
+    type: "Recherche",
+    site: "https://www.ibm.com"
+  },
+  {
+    nom: "Meta AI",
+    description: "Intelligence Artificielle",
+    logo: "/img/meta.png",
+    type: "IA",
+    site: "https://ai.meta.com"
+  },
+  {
+    nom: "Oracle",
+    description: "Solutions Base de Données",
+    logo: "/img/oracle.png",
+    type: "Technologie",
+    site: "https://www.oracle.com"
+  },
+  {
+    nom: "Dell Technologies",
+    description: "Solutions Informatiques",
+    logo: "/img/dell.png",
+    type: "Technologie",
+    site: "https://www.dell.com"
+  },
+  {
+    nom: "Cisco Networking Academy",
+    description: "Formation et Certification Réseaux",
+    logo: "/img/cisco.png",
+    type: "Formation",
+    site: "https://www.netacad.com"
+  },
+
+
+
+  {
+    nom: "Union Africaine / Smart Africa Alliance",
+    description: "Alliance pour le Développement Numérique",
+    logo: "/img/smart.png",
+    type: "International",
+    site: "https://smartafrica.org"
+  },
+
+
+  {
+    nom: "Abidjan.net",
+    description: "Portail d'Information",
+    logo: "/img/anet.png",
+    type: "Média",
+    site: "https://www.abidjan.net"
+  },
+  {
+    nom: "Jeune Afrique",
+    description: "Magazine Panafricain",
+    logo: "/img/jafric.png",
+    type: "Média",
+    site: "https://www.jeuneafrique.com"
+  },
+  {
+    nom: "Tech TV Africa",
+    description: "Chaîne Technologique",
+    logo: "/img/tech.png",
+    type: "Média",
+    site: "https://www.techtvafrica.com"
+  }
 ];
 
 const PartenairesCarousel: React.FC = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsPerPage = 4;
-
-  const totalPages = Math.ceil(partenaires.length / itemsPerPage);
-
-  const goToPrevious = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? totalPages - 1 : prevIndex - 1
-    );
-  };
-
-  const goToNext = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === totalPages - 1 ? 0 : prevIndex + 1
-    );
-  };
-
-  const currentItems = partenaires.slice(
-    currentIndex * itemsPerPage,
-    (currentIndex + 1) * itemsPerPage
-  );
+  // Dupliquer les partenaires pour un défilement continu
+  const duplicatedPartners = [...partenaires, ...partenaires];
 
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -140,46 +294,41 @@ const PartenairesCarousel: React.FC = () => {
         return 'bg-primary/10 text-primary border-primary/20';
       case 'Télécoms':
         return 'bg-secondary/10 text-secondary border-secondary/20';
-      case 'Banque':
-        return 'bg-accent/10 text-accent border-accent/20';
-      case 'Start-up':
+      case 'Régulation':
+        return 'bg-blue-100 text-blue-700 border-blue-200';
+      case 'Technologie':
+        return 'bg-purple-100 text-purple-700 border-purple-200';
+      case 'Énergie':
+        return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+      case 'Conseil':
+        return 'bg-indigo-100 text-indigo-700 border-indigo-200';
+      case 'Formation':
         return 'bg-green-100 text-green-700 border-green-200';
+      case 'IA':
+        return 'bg-pink-100 text-pink-700 border-pink-200';
+      case 'Recherche':
+        return 'bg-cyan-100 text-cyan-700 border-cyan-200';
+      case 'Développement':
+        return 'bg-emerald-100 text-emerald-700 border-emerald-200';
       case 'International':
         return 'bg-purple-100 text-purple-700 border-purple-200';
+      case 'Finance':
+        return 'bg-green-100 text-green-700 border-green-200';
+      case 'Média':
+        return 'bg-orange-100 text-orange-700 border-orange-200';
       default:
         return 'bg-neutral-100 text-neutral-700 border-neutral-200';
     }
   };
 
   return (
-    <div className="relative max-w-7xl mx-auto">
-      {/* Navigation Buttons */}
-      <button
-        onClick={goToPrevious}
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-primary hover:text-white"
-        aria-label="Précédent"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-
-      <button
-        onClick={goToNext}
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-primary hover:text-white"
-        aria-label="Suivant"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
-
-      {/* Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-12">
-        {currentItems.map((partenaire, index) => (
+    <div className="relative max-w-7xl mx-auto overflow-hidden">
+      {/* Défilement continu vers la droite */}
+      <div className="flex animate-scroll space-x-8">
+        {duplicatedPartners.map((partenaire, index) => (
           <div
-            key={partenaire.nom}
-            className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 p-6 text-center"
+            key={`${partenaire.nom}-${index}`}
+            className="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 p-6 text-center"
           >
             {/* Logo */}
             <div className="relative mb-4">
@@ -232,26 +381,6 @@ const PartenairesCarousel: React.FC = () => {
             )}
           </div>
         ))}
-      </div>
-
-      {/* Pagination Indicators */}
-      <div className="flex justify-center mt-8 space-x-2">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentIndex
-              ? 'bg-primary scale-125'
-              : 'bg-neutral-300 hover:bg-primary/50'
-              }`}
-            aria-label={`Page ${index + 1}`}
-          />
-        ))}
-      </div>
-
-      {/* Page Info */}
-      <div className="text-center mt-4 text-sm text-neutral-500">
-        Page {currentIndex + 1} sur {totalPages} • {partenaires.length} partenaires
       </div>
     </div>
   );
