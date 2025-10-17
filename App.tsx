@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Section from './components/Section';
 import TimelineItem from './components/TimelineItem';
+import AdvancedCalendar from './components/AdvancedCalendar';
 import ComiteCarousel from './components/ComiteCarousel';
 import PartenairesCarousel from './components/PartenairesCarousel';
 import ResultatsCarousel from './components/ResultatsCarousel';
@@ -73,7 +75,8 @@ const CountdownTimer: React.FC = () => {
 
   useEffect(() => {
     const calculateAndSetTime = () => {
-      const eventDate = new Date('2026-05-01T00:00:00Z').getTime();
+      // Début du colloque: 21 mai 2026 à 00:00:00 (UTC)
+      const eventDate = new Date('2026-05-21T00:00:00Z').getTime();
       const now = new Date().getTime();
       const difference = eventDate - now;
 
@@ -118,14 +121,7 @@ const CountdownTimer: React.FC = () => {
 };
 
 
-// Mock data for timeline events
-const timelineEvents: TimelineEvent[] = [
-  { date: 'Janvier 2026', description: 'Lancement de l’appel à communications.', icon: '📢' },
-  { date: '28 Février 2026', description: 'Soumission des articles.', icon: '📄' },
-  { date: '10 Mars 2026', description: 'Notification aux auteurs.', icon: '📧' },
-  { date: '20 Avril 2026', description: 'Soumission des versions finales.', icon: '✅' },
-  { date: 'Mai 2026', description: 'Colloque (ESATIC – Abidjan).', icon: '🎉', isHighlighted: true },
-];
+// Mock data for timeline events now built inside component with i18n
 
 const conferenceThemes = [
   { title: 'Intelligence Artificielle, Big Data et Machine Learning' },
@@ -356,6 +352,45 @@ const App: React.FC = () => {
   const inputStyle = "w-full px-4 py-3 bg-white border border-neutral-300 rounded-lg shadow-sm transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent font-body";
   const labelStyle = "block text-neutral-700 font-semibold mb-2 font-sans";
 
+  // Défilement des universités: mesure dynamique de la piste
+  const universitiesContainerRef = useRef<HTMLDivElement | null>(null);
+  const universitiesTrackRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const container = universitiesContainerRef.current;
+    const track = universitiesTrackRef.current;
+    if (!container || !track) return;
+
+    const measure = () => {
+      let totalWidth = 0;
+      track.childNodes.forEach((node) => {
+        if (node instanceof HTMLElement) {
+          totalWidth += node.offsetWidth + 48; // space-x-12 ≈ 48px
+        }
+      });
+      const end = -(totalWidth);
+      const durationPerPixel = 0.04; // secondes par pixel
+      const duration = Math.max(30, Math.round(Math.abs(end) * durationPerPixel));
+      track.style.setProperty('--scroll-end', `${end}px`);
+      track.style.setProperty('--scroll-duration', `${duration}s`);
+    };
+
+    measure();
+    const resizeObserver = new ResizeObserver(() => measure());
+    resizeObserver.observe(container);
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  const { t } = useTranslation();
+
+  const timelineEvents: TimelineEvent[] = useMemo(() => ([
+    { date: t('tl_1_date'), description: t('tl_1_desc'), icon: '📢', status: 'upcoming' },
+    { date: t('tl_2_date'), description: t('tl_2_desc'), icon: '📄', status: 'upcoming' },
+    { date: t('tl_3_date'), description: t('tl_3_desc'), icon: '📧', status: 'upcoming' },
+    { date: t('tl_4_date'), description: t('tl_4_desc'), icon: '✅', status: 'upcoming' },
+    { date: t('tl_5_date'), description: t('tl_5_desc'), icon: '🎉', isHighlighted: true, status: 'upcoming' },
+  ]), [t]);
+
   return (
     <div className="bg-neutral-100 font-body">
       <Header />
@@ -370,48 +405,59 @@ const App: React.FC = () => {
 
             {/* Partenaires Logos - Défilement simple vers la droite */}
             <div className="mb-8 animate-fade-in-up overflow-hidden" style={{ animationDelay: '0.1s' }}>
-              <div className="flex animate-scroll-universities space-x-12">
-                {/* Dupliquer les partenaires pour un défilement continu */}
-                {[...partenairesDefaut, ...partenairesDefaut].map((partenaire, index) => (
-                  <div
-                    key={`${partenaire.name}-${index}`}
-                    className="flex-shrink-0 group"
-                  >
-                    {/* Logo simple et fixe */}
-                    <div className="w-20 h-20 bg-white rounded-lg shadow-lg flex items-center justify-center transition-all duration-300 hover:shadow-xl hover:scale-105 border border-gray-100">
-                      <img
-                        src={partenaire.logo}
-                        alt={`Logo ${partenaire.name}`}
-                        className="max-w-16 max-h-16 object-contain transition-all duration-300 group-hover:scale-110"
-                        onError={(e) => {
-                          // Fallback simple et propre
-                          const target = e.target as HTMLImageElement;
-                          target.style.display = 'none';
-                          const parent = target.parentElement;
-                          if (parent) {
-                            parent.innerHTML = `
-                              <div class="w-full h-full flex items-center justify-center">
-                                <div class="text-gray-600 font-bold text-sm text-center leading-tight">
-                                  ${partenaire.name.split(' ').map(word => word.charAt(0)).join('')}
-                                </div>
-                              </div>
-                            `;
-                          }
-                        }}
-                      />
+              <div className="mx-auto w-[1200px] overflow-hidden" ref={universitiesContainerRef}>
+                <div
+                  className="flex animate-scroll-distance space-x-12 whitespace-nowrap"
+                  style={{
+                    // Valeurs par défaut; seront recalculées côté client par JS si nécessaire
+                    // Ici on vise un cycle complet = largeur totale d'une liste
+                    // -100% est une approximation avant mesure
+                    ['--scroll-end' as any]: '-100%',
+                    ['--scroll-duration' as any]: '60s'
+                  }}
+                  ref={universitiesTrackRef}
+                >
+                  {/* On affiche une seule séquence, l'animation translateX couvre exactement sa largeur */}
+                  {partenairesDefaut.map((partenaire, index) => (
+                    <div
+                      key={`${partenaire.name}-${index}`}
+                      className="flex-shrink-0 group"
+                    >
+                      {/* Logo simple et fixe */}
+                      <div className="w-20 h-20 bg-pure-white rounded-lg shadow-lg flex items-center justify-center transition-all duration-300 hover:shadow-xl hover:scale-105 border border-gray-100">
+                        <img
+                          src={partenaire.logo}
+                          alt={`Logo ${partenaire.name}`}
+                          className="max-w-16 max-h-16 object-contain transition-all duration-300 group-hover:scale-110"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            const parent = target.parentElement;
+                            if (parent) {
+                              parent.innerHTML = `
+                    <div class="w-full h-full flex items-center justify-center">
+                      <div class="text-gray-600 font-bold text-sm text-center leading-tight">
+                        ${partenaire.name.split(' ').map(word => word.charAt(0)).join('')}
+                      </div>
                     </div>
+                  `;
+                            }
+                          }}
+                        />
+                      </div>
 
-                    {/* Nom de l'université - discret */}
-                    <div className="mt-2 text-center">
-                      <span className="text-xs text-white/90 font-medium leading-tight block max-w-20">
-                        {partenaire.name}
-                      </span>
-                      <span className="text-xs text-white/70 block mt-1">
-                        {partenaire.pays}
-                      </span>
+                      {/* Nom de l'université - discret */}
+                      <div className="mt-2 text-center">
+                        <span className="text-xs text-white/90 font-medium leading-tight block max-w-20">
+                          {partenaire.name}
+                        </span>
+                        <span className="text-xs text-white/70 block mt-1">
+                          {partenaire.pays}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -460,12 +506,14 @@ const App: React.FC = () => {
                 </div>
               </div>
             </h1>
-            <p className="text-xl md:text-2xl text-neutral-200 mb-6 animate-fade-in-up" style={{ animationDelay: '0.8s' }}>Colloque Scientifique sur les Technologies de l'Information et de la Communication</p>
+            <p className="text-xl md:text-2xl text-neutral-200 mb-6 animate-fade-in-up" style={{ animationDelay: '0.8s' }}>{t('hero_subtitle')}</p>
 
             <div className="flex justify-center items-center space-x-6 text-neutral-100 mb-8 animate-fade-in-up" style={{ animationDelay: '0.9s' }}>
-              <span className="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>Mai 2026</span>
-              <span className="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>Abidjan, Côte d'Ivoire</span>
+              <span className="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>{t('date_value')}</span>
+              <span className="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>{t('place_value')}</span>
             </div>
+
+
 
             {/* ESATIC Stylisé */}
             <div className="mb-12 animate-fade-in-up" style={{ animationDelay: '1.0s' }}>
@@ -498,13 +546,13 @@ const App: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up" style={{ animationDelay: '0.9s' }}>
               <a href="#soumission" className="bg-accent text-white font-bold py-4 px-10 rounded-full hover:bg-accent/90 transition-all duration-300 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 font-sans w-full sm:w-auto">
-                Soumettre un article
+                {t('hero_submit')}
               </a>
               <a href="#inscription" className="bg-white text-primary font-bold py-4 px-10 rounded-full hover:bg-neutral-200 transition-all duration-300 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 font-sans w-full sm:w-auto">
-                S'inscrire maintenant
+                {t('hero_register')}
               </a>
               <a href="#partenariat" className="bg-secondary text-white font-bold py-4 px-10 rounded-full hover:bg-secondary/90 transition-all duration-300 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 font-sans w-full sm:w-auto">
-                Devenir Partenaire
+                {t('hero_partner')}
               </a>
             </div>
           </div>
@@ -512,10 +560,10 @@ const App: React.FC = () => {
 
         {/* À Propos Section */}
         <div id="a-propos">
-          <Section title="À Propos du CoSTIC 2026" className="bg-neutral-50">
+          <Section title={t('section_about_title')} className="bg-neutral-50">
             <Animated animationClass="animate-slide-in-bottom">
               <p className="text-center text-lg text-neutral-600 mb-12 max-w-3xl mx-auto">
-                Le Colloque Scientifique sur les TIC (CoSTIC) est une plateforme d'excellence visant à catalyser l'innovation numérique et à renforcer la recherche scientifique en Afrique.
+                {t('about_paragraph')}
               </p>
             </Animated>
             <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
@@ -552,16 +600,16 @@ const App: React.FC = () => {
         </div>
 
         {/* Contexte et Justification Section */}
-        <Section title="Contexte et Justification">
+        <Section title={t('context_title')}>
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
             <Animated animationClass="animate-slide-in-left">
-              <h3 className="text-3xl font-bold text-primary mb-4 font-sans">Une Plateforme pour l'Avenir Numérique Africain</h3>
+              <h3 className="text-3xl font-bold text-primary mb-4 font-sans">{t('context_heading')}</h3>
               <p className="text-lg text-neutral-700 leading-relaxed mb-6">
-                Le numérique occupe une place centrale dans la transformation économique et sociale en Afrique. La Côte d’Ivoire, à travers l’ESATIC et ses partenaires, souhaite renforcer la production scientifique et la valorisation des résultats de recherche dans le domaine des TIC.
+                {t('context_paragraph')}
               </p>
               <blockquote className="border-l-4 border-secondary pl-6 italic bg-neutral-100 p-4 rounded-r-lg">
                 <p className="text-lg text-neutral-700 leading-relaxed">
-                  C’est dans cette dynamique qu’est organisé le Colloque Scientifique sur les TIC (CoSTIC 2026), un carrefour d'innovation qui se tiendra en mai 2026 à Abidjan.
+                  {t('context_quote')}
                 </p>
               </blockquote>
             </Animated>
@@ -587,8 +635,13 @@ const App: React.FC = () => {
           </div>
         </Section>
 
+        {/* Timeline Section */}
+        <Section title={t('timeline_title')} className="bg-neutral-50">
+          <AdvancedCalendar events={timelineEvents} />
+        </Section>
+
         {/* Lieu et Date Section */}
-        <Section title="Lieu et Date" className="bg-neutral-50">
+        <Section title={t('place_title')} className="bg-neutral-50">
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             <Animated animationClass="animate-slide-in-left">
               <div className="text-left">
@@ -599,8 +652,8 @@ const App: React.FC = () => {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-primary font-sans">Date</h3>
-                    <p className="text-lg text-neutral-600">Mai 2026 (ESATIC – Abidjan)</p>
+                    <h3 className="text-xl font-bold text-primary font-sans">{t('date_label')}</h3>
+                    <p className="text-lg text-neutral-600">{t('date_value')}</p>
                   </div>
                 </div>
                 <div className="flex items-center">
@@ -611,8 +664,8 @@ const App: React.FC = () => {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-primary font-sans">Lieu</h3>
-                    <p className="text-lg text-neutral-600">ESATIC, Abidjan, Côte d'Ivoire</p>
+                    <h3 className="text-xl font-bold text-primary font-sans">{t('place_label')}</h3>
+                    <p className="text-lg text-neutral-600">{t('place_value')}</p>
                   </div>
                 </div>
               </div>
@@ -636,30 +689,25 @@ const App: React.FC = () => {
         </Section>
 
         {/* Objectifs Section */}
-        <Section title="Objectifs du Colloque">
+        <Section title={t('goals_title')}>
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-start">
             <Animated animationClass="animate-slide-in-left">
               <div className="bg-primary text-white p-8 rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300 -rotate-1">
-                <h3 className="text-3xl font-bold mb-4 font-sans">Objectif Général</h3>
+                <h3 className="text-3xl font-bold mb-4 font-sans">{t('general_objective_title')}</h3>
                 <p className="text-neutral-200 text-lg leading-relaxed">
-                  Mettre en place une plateforme scientifique et technologique d’échanges sur les TIC, permettant de valoriser les travaux des chercheurs et de stimuler l’innovation.
+                  {t('general_objective_text')}
                 </p>
               </div>
             </Animated>
             <Animated animationClass="animate-slide-in-right" delay={150}>
               <div>
-                <h3 className="text-3xl font-bold mb-6 text-primary font-sans">Objectifs Spécifiques</h3>
+                <h3 className="text-3xl font-bold mb-6 text-primary font-sans">{t('specific_objectives_title')}</h3>
                 <ul className="space-y-4">
-                  {[
-                    'Diffuser les résultats récents de la recherche dans le domaine des TIC.',
-                    'Favoriser la collaboration interuniversitaire et avec le secteur privé.',
-                    'Mettre en avant les jeunes chercheurs (Masters, Doctorants).',
-                    'Promouvoir les TIC comme leviers du développement durable.',
-                  ].map((obj, index) => (
+                  {[t('so_1'), t('so_2'), t('so_3'), t('so_4')].map((obj, index) => (
                     <Animated key={obj} animationClass="animate-slide-in-right" delay={150 + index * 100}>
                       <li className="flex items-start">
                         <svg className="w-7 h-7 text-accent mr-4 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span className="text-neutral-700 text-lg">{obj}</span>
+                        <span className="text-neutral-700 dark:text-neutral-200 text-lg">{obj}</span>
                       </li>
                     </Animated>
                   ))}
@@ -671,66 +719,115 @@ const App: React.FC = () => {
 
         {/* Appel à Communications Section */}
         <div id="soumission">
-          <Section title="Appel à Communications" className="bg-neutral-50">
+          <Section title={t('cfp_title')} className="bg-neutral-50">
             <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-start">
               <Animated animationClass="animate-slide-in-left">
                 <div className="bg-neutral-100 p-8 rounded-xl border border-neutral-200 h-full">
-                  <h3 className="text-3xl font-bold text-primary mb-4 font-sans">Thème Général</h3>
+                  <h3 className="text-3xl font-bold text-primary mb-4 font-sans">{t('theme_general_title')}</h3>
                   <p className="text-xl text-neutral-600 italic mb-8">
-                    « Innovations numériques et transformation digitale pour un développement durable en Afrique »
+                    {t('theme_general_text')}
                   </p>
 
-                  <h3 className="text-2xl font-bold text-primary mb-4 font-sans">Modalités de Soumission</h3>
+                  <h3 className="text-2xl font-bold text-primary mb-4 font-sans">{t('submission_modalities_title')}</h3>
                   <ul className="space-y-4 mb-8">
                     {[
-                      { title: "Format", desc: "Résumé étendu de 5 pages maximum.", icon: <svg className="w-6 h-6 text-secondary mr-4 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg> },
-                      { title: "Langues", desc: "Français ou Anglais.", icon: <svg className="w-6 h-6 text-secondary mr-4 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m4-2v2M3 17h16M21 17v-2a2 2 0 00-2-2H5a2 2 0 00-2 2v2m18 0v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2m18 0H3" /></svg> },
-                      { title: "Publication", desc: "Actes disponibles en ligne et sélection pour une revue internationale.", icon: <svg className="w-6 h-6 text-secondary mr-4 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14l9-5-9-5-9 5 9 5z" /><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222 4 2.222V20" /></svg> }
+                      { title: t('modality_format_title'), desc: t('modality_format_desc'), icon: <svg className="w-6 h-6 text-secondary mr-4 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg> },
+                      { title: t('modality_lang_title'), desc: t('modality_lang_desc'), icon: <svg className="w-6 h-6 text-secondary mr-4 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m4-2v2M3 17h16M21 17v-2a2 2 0 00-2-2H5a2 2 0 00-2 2v2m18 0v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2m18 0H3" /></svg> },
+                      { title: t('modality_pub_title'), desc: t('modality_pub_desc'), icon: <svg className="w-6 h-6 text-secondary mr-4 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14l9-5-9-5-9 5 9 5z" /><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222 4 2.222V20" /></svg> }
                     ].map(item => (
                       <li key={item.title} className="flex items-start">
                         {item.icon}
                         <div>
-                          <h4 className="font-bold text-neutral-800 font-sans">{item.title}</h4>
-                          <p className="text-neutral-600">{item.desc}</p>
+                          <h4 className="font-bold text-neutral-800 dark:text-neutral-100 font-sans">{item.title}</h4>
+                          <p className="text-neutral-600 dark:text-neutral-200">{item.desc}</p>
                         </div>
                       </li>
                     ))}
                   </ul>
-                  <a href="http://costic2026.esatic.ci" target="_blank" rel="noopener noreferrer" className="w-full inline-block text-center bg-secondary text-white font-bold py-3 px-8 rounded-lg hover:bg-primary transition-all duration-300 text-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-sans">
+                  {/* Modèles de soumission */}
+                  <div className="mt-8 p-4 bg-white rounded-lg border border-neutral-200">
+                    <h4 className="font-bold text-neutral-800 font-sans mb-3">{t('models_title')}</h4>
+                    <p className="text-neutral-600 text-sm mb-4">{t('models_desc')}</p>
+                    <div className="flex flex-wrap gap-3">
+                      <a
+                        href="/templates/exemple_CoSTIC2026.doc"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={async () => {
+                          try {
+                            await addDoc(collection(db, 'templateDownloads'), {
+                              format: 'docx',
+                              path: '/templates/exemple_CoSTIC2026.doc',
+                              userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
+                              downloadedAt: serverTimestamp()
+                            });
+                          } catch (e) {
+                            console.error('Erreur de tracking modèle DOCX', e);
+                          }
+                        }}
+                        className="inline-flex items-center gap-2 bg-primary text-white font-semibold py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors text-sm"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M19 2H8a2 2 0 0 0-2 2v3h2V4h11v16H8v-3H6v3a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z" /><path d="M13 12H4.83l2.58-2.59L6 8l-5 5 5 5 1.41-1.41L4.83 14H13v-2Z" /></svg>
+                        {t('model_word')}
+                      </a>
+                      <a
+                        href="/templates/CoSTIC_2026_latex_template.zip"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={async () => {
+                          try {
+                            await addDoc(collection(db, 'templateDownloads'), {
+                              format: 'latex',
+                              path: '/templates/CoSTIC_2026_latex_template.zip',
+                              userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
+                              downloadedAt: serverTimestamp()
+                            });
+                          } catch (e) {
+                            console.error('Erreur de tracking modèle LaTeX', e);
+                          }
+                        }}
+                        className="inline-flex items-center gap-2 bg-secondary text-white font-semibold py-2 px-4 rounded-lg hover:bg-secondary/90 transition-colors text-sm"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v12h2V4h8V2Zm4 4h-8a2 2 0 0 0-2 2v12h10a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2Zm0 12H8V8h10v10Z" /></svg>
+                        {t('model_latex')}
+                      </a>
+                    </div>
+                  </div>
+                  {/* <a href="http://costic2026.esatic.ci" target="_blank" rel="noopener noreferrer" className="w-full inline-block text-center bg-secondary text-white font-bold py-3 px-8 rounded-lg hover:bg-primary transition-all duration-300 text-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-sans">
                     Soumettre via la Plateforme Officielle
-                  </a>
+                  </a> */}
                 </div>
               </Animated>
               <Animated animationClass="animate-slide-in-right" delay={150}>
                 <div className="bg-white p-8 rounded-xl shadow-2xl">
-                  <h3 className="text-3xl font-bold text-primary mb-6 font-sans">Soumission d'Article</h3>
+                  <h3 className="text-3xl font-bold text-primary mb-6 font-sans">{t('submission_form_title')}</h3>
                   <form onSubmit={handleArticleSubmit}>
                     <div className="space-y-5">
                       <div>
-                        <label htmlFor="authorName" className={labelStyle}>Nom de l'auteur principal*</label>
+                        <label htmlFor="authorName" className={labelStyle}>{t('label_author_name')}</label>
                         <input type="text" id="authorName" value={submission.authorName} onChange={handleSubmissionChange} className={inputStyle} required disabled={isSubmitting} />
                       </div>
                       <div>
-                        <label htmlFor="authorEmail" className={labelStyle}>E-mail*</label>
+                        <label htmlFor="authorEmail" className={labelStyle}>{t('label_author_email')}</label>
                         <input type="email" id="authorEmail" value={submission.authorEmail} onChange={handleSubmissionChange} className={inputStyle} required disabled={isSubmitting} />
                       </div>
                       <div>
-                        <label htmlFor="affiliation" className={labelStyle}>Affiliation</label>
+                        <label htmlFor="affiliation" className={labelStyle}>{t('label_affiliation')}</label>
                         <input type="text" id="affiliation" value={submission.affiliation} onChange={handleSubmissionChange} className={inputStyle} disabled={isSubmitting} />
                       </div>
                       <div>
-                        <label htmlFor="articleTitle" className={labelStyle}>Titre de l'article*</label>
+                        <label htmlFor="articleTitle" className={labelStyle}>{t('label_article_title')}</label>
                         <input type="text" id="articleTitle" value={submission.articleTitle} onChange={handleSubmissionChange} className={inputStyle} required disabled={isSubmitting} />
                       </div>
                       <div>
-                        <label htmlFor="themeSelect" className={labelStyle}>Thématique</label>
+                        <label htmlFor="themeSelect" className={labelStyle}>{t('label_theme_select')}</label>
                         <select id="themeSelect" value={submission.themeSelect} onChange={handleSubmissionChange} className={inputStyle} disabled={isSubmitting}>
-                          <option value="">Choisissez une thématique...</option>
+                          <option value="">{t('theme_placeholder')}</option>
                           {conferenceThemes.map(theme => <option key={theme.title} value={theme.title}>{theme.title}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label htmlFor="fileUpload" className={labelStyle}>Fichier (PDF, 5 pages max)*</label>
+                        <label htmlFor="fileUpload" className={labelStyle}>{t('label_file_upload')}</label>
                         <input type="file" id="fileUpload" onChange={handleFileChange} accept=".pdf" className="w-full text-sm text-neutral-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-secondary/10 file:text-primary hover:file:bg-secondary/20 cursor-pointer font-body" required disabled={isSubmitting} />
                       </div>
                       <button type="submit" disabled={isSubmitting} className="w-full bg-primary text-white font-bold py-4 px-8 rounded-lg hover:bg-primary/90 transition-all duration-300 text-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-sans disabled:bg-neutral-400 disabled:cursor-not-allowed flex justify-center items-center">
@@ -740,11 +837,11 @@ const App: React.FC = () => {
                               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
-                            Soumission en cours...
+                            {t('submitting_text')}
                           </>
-                        ) : "Soumettre l'article"}
+                        ) : t('submit_article_btn')}
                       </button>
-                      {submissionStatus && <p className={`mt-4 text-center text-sm ${submissionStatus.startsWith('Erreur') ? 'text-red-600' : 'text-green-600'}`}>{submissionStatus}</p>}
+                      {submissionStatus && <p className={`mt-4 text-center text-sm ${submissionStatus.startsWith('Erreur') || submissionStatus.startsWith('Error') ? 'text-red-600' : 'text-green-600'}`}>{submissionStatus}</p>}
                     </div>
                   </form>
                 </div>
@@ -755,40 +852,40 @@ const App: React.FC = () => {
 
         {/* Inscription & Paiement Section */}
         <div id="inscription">
-          <Section title="Inscription & Paiement">
+          <Section title={t('registration_title')}>
             <Animated animationClass="animate-slide-in-bottom">
-              <div className="max-w-5xl mx-auto p-8 bg-white rounded-xl shadow-2xl border border-neutral-200">
+              <div className="max-w-5xl mx-auto p-8 bg-white dark:bg-neutral-900 rounded-xl shadow-2xl border border-neutral-200 dark:border-neutral-700">
                 <p className="text-center text-lg text-neutral-600 mb-10 max-w-2xl mx-auto">
-                  Finalisez votre participation en remplissant le formulaire ci-dessous. Les frais d'inscription donnent accès à toutes les sessions, aux pauses-café, au déjeuner et aux actes du colloque.
+                  {t('registration_intro')}
                 </p>
                 <div className="grid lg:grid-cols-2 gap-12 items-center">
                   <form onSubmit={handleRegistrationSubmit} className="space-y-6">
                     <div>
-                      <label htmlFor="name" className={labelStyle}>Nom complet*</label>
+                      <label htmlFor="name" className={labelStyle}>{t('label_name')}</label>
                       <input type="text" id="name" value={registration.name} onChange={handleRegistrationChange} className={inputStyle} required disabled={isRegistering} />
                     </div>
                     <div>
-                      <label htmlFor="email" className={labelStyle}>E-mail*</label>
+                      <label htmlFor="email" className={labelStyle}>{t('label_email')}</label>
                       <input type="email" id="email" value={registration.email} onChange={handleRegistrationChange} className={inputStyle} required disabled={isRegistering} />
                     </div>
                     <div>
-                      <label htmlFor="participantType" className={labelStyle}>Type de participant*</label>
+                      <label htmlFor="participantType" className={labelStyle}>{t('label_participant_type')}</label>
                       <select id="participantType" value={registration.participantType} onChange={handleRegistrationChange} className={inputStyle} disabled={isRegistering}>
-                        <option value="chercheur">Chercheur / Professionnel</option>
-                        <option value="etudiant">Étudiant</option>
+                        <option value="chercheur">{t('option_researcher')}</option>
+                        <option value="etudiant">{t('option_student')}</option>
                       </select>
                     </div>
                   </form>
 
                   <div className="bg-neutral-100 p-8 rounded-xl border border-neutral-200">
-                    <h3 className="text-2xl font-bold text-primary mb-6 border-b border-neutral-200 pb-4 font-sans">Résumé de l'inscription</h3>
+                    <h3 className="text-2xl font-bold text-primary mb-6 border-b border-neutral-200 pb-4 font-sans">{t('summary_title')}</h3>
                     <div className="space-y-4">
                       <div className="flex justify-between items-center text-lg">
-                        <span className="text-neutral-600">Catégorie :</span>
+                        <span className="text-neutral-600">{t('summary_category')}</span>
                         <span className="font-bold text-primary font-sans">{registration.participantType === 'etudiant' ? 'Étudiant' : 'Chercheur'}</span>
                       </div>
                       <div className="flex justify-between items-center text-3xl pt-4">
-                        <span className="text-neutral-600 font-sans">Total :</span>
+                        <span className="text-neutral-600 font-sans">{t('summary_total')}</span>
                         <div className="text-right">
                           <span className="font-extrabold text-primary font-sans">{registration.participantType === 'etudiant' ? '75€' : '150€'}</span>
                           <p className="text-sm text-neutral-500 font-normal">{registration.participantType === 'etudiant' ? '(~49 000 XOF)' : '(~98 000 XOF)'}</p>
@@ -800,17 +897,17 @@ const App: React.FC = () => {
                         {isRegistering ? (
                           <>
                             <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                            Enregistrement...
+                            {t('registering_text')}
                           </>
                         ) : (
                           <>
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
-                            Procéder au paiement
+                            {t('pay_btn')}
                           </>
                         )}
                       </button>
-                      {registrationStatus && <p className={`mt-4 text-center text-sm ${registrationStatus.startsWith('Erreur') ? 'text-red-600' : 'text-green-600'}`}>{registrationStatus}</p>}
-                      <p className="text-xs text-neutral-500 text-center mt-4">Paiement sécurisé via notre partenaire Paystack.</p>
+                      {registrationStatus && <p className={`mt-4 text-center text-sm ${registrationStatus.startsWith('Erreur') || registrationStatus.startsWith('Error') ? 'text-red-600' : 'text-green-600'}`}>{registrationStatus}</p>}
+                      <p className="text-xs text-neutral-500 text-center mt-4">{t('payment_note')}</p>
                     </div>
                   </div>
                 </div>
@@ -821,13 +918,12 @@ const App: React.FC = () => {
 
         {/* Participants Cibles Section - Comité Scientifique */}
         <div id="comite-scientifique">
-          <Section title="Participants Ciblés" className="bg-neutral-50">
+          <Section title={t('participants_title')} className="bg-neutral-50">
             <Animated animationClass="animate-slide-in-bottom">
               <div className="mb-8 text-center">
-                <h3 className="text-2xl font-bold text-primary mb-4 font-sans">Comité Scientifique</h3>
+                <h3 className="text-2xl font-bold text-primary mb-4 font-sans">{t('committee_title')}</h3>
                 <p className="text-lg text-neutral-600 max-w-3xl mx-auto">
-                  Notre comité scientifique est composé d'experts reconnus dans le domaine des TIC
-                  provenant des plus grandes universités d'Afrique de l'Ouest et du Canada.
+                  {t('committee_paragraph')}
                 </p>
               </div>
             </Animated>
@@ -837,10 +933,9 @@ const App: React.FC = () => {
             <Animated animationClass="animate-slide-in-bottom" delay={200}>
               <div className="mt-16">
                 <div className="text-center mb-12">
-                  <h3 className="text-2xl font-bold text-primary mb-4 font-sans">Partenariats et Sponsoring</h3>
+                  <h3 className="text-2xl font-bold text-primary mb-4 font-sans">{t('partnerships_title')}</h3>
                   <p className="text-lg text-neutral-600 max-w-3xl mx-auto">
-                    Nous sommes fiers de compter sur le soutien de partenaires institutionnels et du secteur privé
-                    pour faire de ce colloque un événement d'excellence.
+                    {t('partnerships_paragraph')}
                   </p>
                 </div>
 
@@ -849,21 +944,21 @@ const App: React.FC = () => {
                 {/* Détails des partenaires */}
                 <div className="mt-12 grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
                   <div className="text-center">
-                    <h5 className="font-bold text-neutral-800 mb-2 font-sans">Soutien Institutionnel</h5>
+                    <h5 className="font-bold text-neutral-800 mb-2 font-sans">{t('partner_card_1_title')}</h5>
                     <p className="text-sm text-neutral-600">
-                      Accompagnement dans l'organisation et la promotion du colloque
+                      {t('partner_card_1_desc')}
                     </p>
                   </div>
                   <div className="text-center">
-                    <h5 className="font-bold text-neutral-800 mb-2 font-sans">Innovation Technologique</h5>
+                    <h5 className="font-bold text-neutral-800 mb-2 font-sans">{t('partner_card_2_title')}</h5>
                     <p className="text-sm text-neutral-600">
-                      Expertise technique et solutions technologiques pour l'événement
+                      {t('partner_card_2_desc')}
                     </p>
                   </div>
                   <div className="text-center">
-                    <h5 className="font-bold text-neutral-800 mb-2 font-sans">Reconnaissance Internationale</h5>
+                    <h5 className="font-bold text-neutral-800 mb-2 font-sans">{t('partner_card_3_title')}</h5>
                     <p className="text-sm text-neutral-600">
-                      Validation scientifique et visibilité internationale
+                      {t('partner_card_3_desc')}
                     </p>
                   </div>
                 </div>
@@ -872,44 +967,31 @@ const App: React.FC = () => {
           </Section>
         </div>
 
-        {/* Timeline Section */}
-        <Section title="Calendrier prévisionnel">
-          <div className="max-w-3xl mx-auto">
-            <div className="relative">
-              <div className="absolute left-4 top-0 h-full w-0.5 bg-neutral-200" aria-hidden="true"></div>
-              {timelineEvents.map((event, index) => (
-                <TimelineItem key={event.date} event={event} isLast={index === timelineEvents.length - 1} />
-              ))}
-            </div>
-          </div>
-        </Section>
-
-
         {/* Publications & Actes Section */}
-        <Section title="Publications & Actes">
+        <Section title={t('publications_title')}>
           <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-8">
             <Animated animationClass="animate-slide-in-left">
               <div className="bg-primary text-white p-10 rounded-xl flex flex-col items-center text-center shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
                 <div className="mb-4">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
                 </div>
-                <h3 className="text-3xl font-bold mb-4 font-sans">Actes du Colloque</h3>
+                <h3 className="text-3xl font-bold mb-4 font-sans">{t('proceedings_title')}</h3>
                 <p className="text-neutral-200 text-lg mb-6 max-w-md">
-                  Les actes complets du colloque seront disponibles en ligne, assurant une large diffusion des travaux.
+                  {t('proceedings_text')}
                 </p>
                 <a href="#" className="bg-neutral-600 text-white font-bold py-3 px-8 rounded-lg text-lg cursor-not-allowed opacity-75 font-sans">
-                  Consulter (prochainement)
+                  {t('proceedings_soon')}
                 </a>
               </div>
             </Animated>
             <Animated animationClass="animate-slide-in-right" delay={150}>
-              <div className="bg-white p-10 rounded-xl shadow-lg border border-neutral-100 flex flex-col items-center text-center hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+              <div className="bg-white dark:bg-neutral-900 p-10 rounded-xl shadow-lg border border-neutral-100 dark:border-neutral-700 flex flex-col items-center text-center hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
                 <div className="mb-4">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-2.236 9.168-5.514C18.358 1.84 18.668 1.5 19 1.5v1.5a1.5 1.5 0 01-1.5 1.5H16v2.083a6.001 6.001 0 00-6 6H6.436z" /></svg>
                 </div>
-                <h3 className="text-3xl font-bold text-primary mb-4 font-sans">Revue Internationale</h3>
+                <h3 className="text-3xl font-bold text-primary mb-4 font-sans">{t('journal_title')}</h3>
                 <p className="text-neutral-700 text-lg max-w-md">
-                  Une sélection d'articles remarquables sera proposée pour une publication dans une revue scientifique de premier plan.
+                  {t('journal_text')}
                 </p>
               </div>
             </Animated>
@@ -917,13 +999,13 @@ const App: React.FC = () => {
         </Section>
 
         {/* Expected Outcomes Section */}
-        <Section title="Résultats Attendus" className="bg-neutral-50">
+        <Section title={t('outcomes_title')} className="bg-neutral-50">
           <ResultatsCarousel />
         </Section>
 
         {/* Partenariat Section */}
         <div id="partenariat">
-          <Section title="Devenir Partenaire" className="bg-white">
+          <Section className="bg-white">
             <PartenaireForm />
           </Section>
         </div>

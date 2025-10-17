@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface Partenaire {
   nom: string;
@@ -40,26 +40,18 @@ const partenaires: Partenaire[] = [
     site: "https://www.auf.org"
   },
   {
+    nom: "Sahanalytics",
+    description: "Data & Analytics",
+    logo: "/img/sah.png",
+    type: "Technologie",
+    site: "https://sahanalytics.com/"
+  },
+  {
     nom: "EAI",
     description: "European Alliance for Innovation",
     logo: "/img/EAI - European Alliance for Innovation.png",
     type: "International",
     site: "https://eai.eu"
-  },
-
-  {
-    nom: "UNESCO",
-    description: "Organisation des Nations Unies pour l'Éducation",
-    logo: "/img/unesco.png",
-    type: "International",
-    site: "https://www.unesco.org"
-  },
-  {
-    nom: "BAD",
-    description: "Banque Africaine de Développement",
-    logo: "/img/bad.jpg",
-    type: "Finance",
-    site: "https://www.afdb.org"
   },
   {
     nom: "Orange Côte d'Ivoire",
@@ -94,7 +86,7 @@ const partenaires: Partenaire[] = [
   {
     nom: "RTI",
     description: "Radiodiffusion Télévision Ivoirienne",
-    logo: "/img/rti.png",
+    logo: "/img/rtii.jpg",
     type: "Média",
     site: "https://www.rti.ci"
   },
@@ -106,7 +98,7 @@ const partenaires: Partenaire[] = [
     site: "https://www.fratmat.info"
   },
   {
-    nom: "Ministère de la Communication et de l'Économie Numérique",
+    nom: "MCEN",
     description: "Ministère de la Communication",
     logo: "/img/ministere-communication.png",
     type: "Institutionnel",
@@ -114,7 +106,7 @@ const partenaires: Partenaire[] = [
   },
   {
     nom: "SNDI",
-    description: "Société Nationale de Développement Informatique",
+    description: "SNDI",
     logo: "/img/sndi.png",
     type: "Développement",
     site: "https://www.sndi.ci"
@@ -130,7 +122,7 @@ const partenaires: Partenaire[] = [
   {
     nom: "AFD",
     description: "Agence Française de Développement",
-    logo: "/img/afd.png",
+    logo: "/img/afdd.png",
     type: "Développement",
     site: "https://www.afd.fr"
   },
@@ -253,11 +245,11 @@ const partenaires: Partenaire[] = [
 
 
   {
-    nom: "Union Africaine / Smart Africa Alliance",
+    nom: "Smart Africa Alliance",
     description: "Alliance pour le Développement Numérique",
-    logo: "/img/smart.png",
+    logo: "/img/Smart_Africa_Secretariat_logo.png",
     type: "International",
-    site: "https://smartafrica.org"
+    site: "https://smartafrica.org/fr/page-daccueil/"
   },
 
 
@@ -285,8 +277,40 @@ const partenaires: Partenaire[] = [
 ];
 
 const PartenairesCarousel: React.FC = () => {
-  // Dupliquer les partenaires pour un défilement continu
-  const duplicatedPartners = [...partenaires, ...partenaires];
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+
+  // Une seule séquence; l'animation parcourt exactement sa largeur mesurée
+  const duplicatedPartners = partenaires;
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const track = trackRef.current;
+    if (!container || !track) return;
+
+    const measure = () => {
+      const containerWidth = container.clientWidth;
+      // largeur totale de la piste (somme des cartes + espace)
+      let totalWidth = 0;
+      track.childNodes.forEach((node) => {
+        if (node instanceof HTMLElement) {
+          totalWidth += node.offsetWidth + 32; // space-x-8 ≈ 32px
+        }
+      });
+      // fin de translation = - (totalWidth)
+      // pour éviter un espace vide, on ajoute un petit tampon
+      const end = -(totalWidth);
+      const durationPerPixel = 0.04; // secondes par pixel (vitesse)
+      const duration = Math.max(30, Math.round(Math.abs(end) * durationPerPixel));
+      track.style.setProperty('--scroll-end', `${end}px`);
+      track.style.setProperty('--scroll-duration', `${duration}s`);
+    };
+
+    measure();
+    const resizeObserver = new ResizeObserver(() => measure());
+    resizeObserver.observe(container);
+    return () => resizeObserver.disconnect();
+  }, []);
 
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -322,9 +346,9 @@ const PartenairesCarousel: React.FC = () => {
   };
 
   return (
-    <div className="relative max-w-7xl mx-auto overflow-hidden">
+    <div className="relative max-w-7xl mx-auto overflow-hidden" ref={containerRef}>
       {/* Défilement continu vers la droite */}
-      <div className="flex animate-scroll space-x-8">
+      <div className="flex animate-scroll-distance space-x-8 whitespace-nowrap" ref={trackRef}>
         {duplicatedPartners.map((partenaire, index) => (
           <div
             key={`${partenaire.nom}-${index}`}

@@ -25,14 +25,6 @@ export const partenairesDefaut: Partenaire[] = [
     hoverColor: 'hover:bg-partner-green-hover'
   },
   {
-    name: 'ENSEA',
-    logo: '/img/ensea.png',
-    siteWeb: 'https://ensea.ci',
-    pays: 'Côte d\'Ivoire',
-    bgColor: 'bg-partner-red',
-    hoverColor: 'hover:bg-partner-red-hover'
-  },
-  {
     name: 'UVCI',
     logo: '/img/uvci.png',
     siteWeb: 'https://uvci.ci',
@@ -41,7 +33,23 @@ export const partenairesDefaut: Partenaire[] = [
     hoverColor: 'hover:bg-partner-purple-hover'
   },
   {
-    name: 'Université de San Pedro',
+    name: 'UAO',
+    logo: '/img/uao.jpg',
+    siteWeb: 'https://uao.edu.ci',
+    pays: 'Côte d\'Ivoire',
+    bgColor: 'bg-partner-teal',
+    hoverColor: 'hover:bg-partner-teal-hover'
+  },
+  {
+    name: 'UPGC',
+    logo: '/img/upgc.png',
+    siteWeb: 'https://upgc.edu.ci',
+    pays: 'Côte d\'Ivoire',
+    bgColor: 'bg-partner-emerald',
+    hoverColor: 'hover:bg-partner-emerald-hover'
+  },
+  {
+    name: 'USP',
     logo: '/img/usp.jpg',
     siteWeb: 'https://usp.ci',
     pays: 'Côte d\'Ivoire',
@@ -49,7 +57,7 @@ export const partenairesDefaut: Partenaire[] = [
     hoverColor: 'hover:bg-partner-orange-hover'
   },
   {
-    name: 'Université Nangui Abrogoua',
+    name: 'UNA',
     logo: '/img/una.png',
     siteWeb: 'https://una.ci',
     pays: 'Côte d\'Ivoire',
@@ -65,7 +73,7 @@ export const partenairesDefaut: Partenaire[] = [
     hoverColor: 'hover:bg-partner-emerald-hover'
   },
   {
-    name: 'Centre De Recherche Oceanologique (CRO)',
+    name: 'CRO',
     logo: '/img/cro.png',
     siteWeb: 'https://cro.ci',
     pays: 'Côte d\'Ivoire',
@@ -73,7 +81,7 @@ export const partenairesDefaut: Partenaire[] = [
     hoverColor: 'hover:bg-partner-teal-hover'
   },
   {
-    name: 'Institut Pasteur de Côte d Ivoire',
+    name: 'IPCI',
     logo: '/img/institut paseur.jpg',
     siteWeb: 'https://pasteur.ci',
     pays: 'Côte d\'Ivoire',
@@ -81,15 +89,23 @@ export const partenairesDefaut: Partenaire[] = [
     hoverColor: 'hover:bg-partner-rose-hover'
   },
   {
-    name: 'UFR de Mathematique et Informatique',
-    logo: '/img/ufr maths-infos.jpg',
+    name: 'UFR MATHS',
+    logo: '/img/ufr.jpg',
     siteWeb: 'https://ufr-math-info.ci',
     pays: 'Côte d\'Ivoire',
     bgColor: 'bg-partner-violet',
     hoverColor: 'hover:bg-partner-violet-hover'
   },
   {
-    name: 'Université Joseph Ki-Zerbo',
+    name: 'SMCI',
+    logo: '/img/SMCI_logo_new.png',
+    siteWeb: 'https://example.com/smci',
+    pays: 'Côte d\'Ivoire',
+    bgColor: 'bg-partner-indigo',
+    hoverColor: 'hover:bg-partner-indigo-hover'
+  },
+  {
+    name: 'UJKZ',
     logo: '/img/uJKZ.jpg',
     siteWeb: 'https://www.univ-ouaga.bf',
     pays: 'Burkina Faso',
@@ -97,7 +113,7 @@ export const partenairesDefaut: Partenaire[] = [
     hoverColor: 'hover:bg-partner-blue-hover'
   },
   {
-    name: 'Université Gaston Berger',
+    name: 'UGB',
     logo: '/img/UGBS.jpg',
     siteWeb: 'https://www.ugb.sn',
     pays: 'Sénégal',
@@ -137,7 +153,7 @@ export const partenairesDefaut: Partenaire[] = [
     hoverColor: 'hover:bg-partner-indigo-hover'
   },
   {
-    name: 'Université Cheikh Anta Diop (UCAD)',
+    name: 'UCAD',
     logo: '/img/UCAD.png',
     siteWeb: 'https://www.ucad.sn',
     pays: 'Sénégal',

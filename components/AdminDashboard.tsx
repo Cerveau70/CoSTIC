@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, where } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import AdminPartenaires from './AdminPartenaires';
@@ -29,10 +29,19 @@ interface Registration {
   paymentDate?: any;
 }
 
+interface TemplateDownload {
+  id: string;
+  format: 'docx' | 'latex' | string;
+  path: string;
+  userAgent?: string;
+  downloadedAt: any;
+}
+
 const AdminDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'submissions' | 'participants' | 'partenaires'>('submissions');
+  const [activeTab, setActiveTab] = useState<'submissions' | 'participants' | 'partenaires' | 'templates'>('submissions');
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [participants, setParticipants] = useState<Registration[]>([]);
+  const [templateDownloads, setTemplateDownloads] = useState<TemplateDownload[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -59,6 +68,12 @@ const AdminDashboard: React.FC = () => {
 
       setSubmissions(submissionsData);
       setParticipants(participantsData);
+
+      // Charger les téléchargements de modèles
+      const templatesQuery = query(collection(db, 'templateDownloads'), orderBy('downloadedAt', 'desc'));
+      const templatesSnapshot = await getDocs(templatesQuery);
+      const templatesData = templatesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as TemplateDownload[];
+      setTemplateDownloads(templatesData);
     } catch (error) {
       console.error('Erreur lors du chargement des données:', error);
     } finally {
@@ -171,6 +186,15 @@ const AdminDashboard: React.FC = () => {
                 }`}
             >
               Partenaires
+            </button>
+            <button
+              onClick={() => setActiveTab('templates')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'templates'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300'
+                }`}
+            >
+              Modèles
             </button>
           </nav>
         </div>
@@ -306,6 +330,73 @@ const AdminDashboard: React.FC = () => {
 
           {activeTab === 'partenaires' && (
             <AdminPartenaires />
+          )}
+
+          {activeTab === 'templates' && (
+            <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+              <div className="px-6 py-4 border-b border-neutral-200">
+                <h2 className="text-xl font-bold text-neutral-900 font-sans">Téléchargements des Modèles</h2>
+                <p className="text-neutral-600">Statistiques et historique des téléchargements (DOCX et LaTeX)</p>
+              </div>
+
+              {/* Statistiques globales */}
+              <div className="px-6 py-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="rounded-lg border border-neutral-200 p-4">
+                  <div className="text-sm text-neutral-500">Total DOCX</div>
+                  <div className="text-2xl font-bold text-primary">
+                    {templateDownloads.filter(t => t.format === 'docx').length}
+                  </div>
+                </div>
+                <div className="rounded-lg border border-neutral-200 p-4">
+                  <div className="text-sm text-neutral-500">Total LaTeX</div>
+                  <div className="text-2xl font-bold text-secondary">
+                    {templateDownloads.filter(t => t.format === 'latex').length}
+                  </div>
+                </div>
+                <div className="rounded-lg border border-neutral-200 p-4">
+                  <div className="text-sm text-neutral-500">Total</div>
+                  <div className="text-2xl font-bold text-neutral-800">
+                    {templateDownloads.length}
+                  </div>
+                </div>
+              </div>
+
+              {/* Historique détaillé */}
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-neutral-200">
+                  <thead className="bg-neutral-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Format</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Fichier</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Agent</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-neutral-200">
+                    {templateDownloads.map(item => (
+                      <tr key={item.id} className="hover:bg-neutral-50">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${item.format === 'docx' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
+                            {item.format.toUpperCase()}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-neutral-700">{item.path}</td>
+                        <td className="px-6 py-4 text-xs text-neutral-500 max-w-xs truncate" title={item.userAgent}>{item.userAgent || 'N/A'}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">{formatDate(item.downloadedAt)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {templateDownloads.length === 0 && (
+                  <div className="text-center py-12">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-neutral-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <p className="text-neutral-500">Aucun téléchargement enregistré pour le moment</p>
+                  </div>
+                )}
+              </div>
+            </div>
           )}
         </div>
       </div>

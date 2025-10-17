@@ -1,0 +1,137 @@
+% Exemple d'utilisation de la classe roadef pour le congrès ROADEF 2019 (https://roadef2022.sciencesconf.org)
+
+\documentclass{costic}
+\usepackage{enumitem}
+\begin{document}
+	
+	
+	% Le titre du papier
+	\title{CoSTIC 2026, modèle de document \LaTeX{} pour un résumé}
+	
+	% Le titre court
+	\def\shorttitle{Titre court}
+	
+	% Les auteurs et leur numéro d'affiliation
+	\author{Prénom Nom\inst{1}, Prénom Nom\inst{2}, Prénom Nom\inst{1}}
+	
+	
+	% Les affiliations (par ordre croissant des numéros d'affiliation) séparées par \and
+	\institute{
+		Affiliation \\
+		\email{\{auteur1, auteur3\}@email.adresse}
+		\and
+		Affiliation \\
+		\email{auteur2@email.adresse}
+	}
+	
+	
+	% Création de la page de titre
+	\maketitle
+	\thispagestyle{empty}
+	
+	% Les mots-clés
+	%\keywords{recherche opérationnelle, optimisation.}
+	
+	
+	\section{Introduction}
+	Ceci est un modèle de document \LaTeX{} pour le résumé d'un article dans le cadre du Colloque scientifique sur les TIC (CoSTIC), qui se tiendra à \textit{l'École supérieure africaine des TIC} (ESATIC) du 21 au 23 mai 2026. La limite de cinq pages (bibliographie incluse) ne s'applique pas aux soumissions pour le prix du meilleur article étudiant, pour lesquelles la limite est fixée à au moins cinq pages et à dix pages au plus. La taille du texte courant est de 11. Les marges sont de 2,5 cm partout, avec une marge de reliure de 0,5 cm à gauche.
+	
+	\section{Résumé}
+	Votre résumé doit énoncer clairement le contexte, la problématique, la méthodologie, les résultats principaux et la conclusion. Il doit être compréhensible sans la lecture de l'article entier. L'auteur doit supposer que le lecteur a une certaine connaissance du sujet mais n'a pas lu l'article. Ainsi, le résumé doit être intelligible et complet en lui-même ; Il ne doit pas citer de figures, de tableaux ou de sections du document. Le résumé doit être rédigé à la troisième personne plutôt qu'à la première personne.
+	
+	\keywords{Utilisez environ cinq mots ou expressions clés par ordre alphabétique, séparés par une virgule.  Ex : Intelligence Artificielle, Cybersécurité, Éthique, Big Data.}
+	
+	\section{Système de référence}
+	
+	\subsection{Référence à une illustration, tableau ou formule}
+	
+	Un renvoi à une illustration (figure, graphique...), à un tableau ou à une formule pourra se faire de deux façons différentes : 
+	\begin{enumerate}[label=\roman*)]
+		\item De \textbf{manière directe}, en mentionnant l’élément avant la description. Par exemple : la Figure (\ref{logoCoSTIC}) représente le logo de la CoSTIC 
+		\item 	De \textbf{façon intégrée dans la phrase}, c’est-à-dire en insérant la référence entre parenthèses. Par exemple : Le logo de la CoSTIC (voir Figure~\ref{logoCoSTIC}) est très simple$^{1}$.
+	\end{enumerate}
+	\footnote{Exemple de pied de page}
+	
+	\subsection{Références bibliographique}
+	
+	Les références bibliographiques doivent être indiquées entre crochets dans le texte. En cas de citations multiples, les références seront placées dans le même groupe de crochets et classées selon l’ordre dans lequel elles apparaissent dans la liste des références (par exemple : \cite{kirkpatrick83,toth02}). Par ailleurs, la liste complète des références figurant en fin de document devra être organisée par ordre alphabétique du nom de famille du premier auteur. À titre d’illustration, on peut citer : un article de revue \cite{kirkpatrick83} ou encore un ouvrage \cite{toth02}.
+	
+	
+	
+	\subsection{Illustration, formule et légende}
+	
+	La légende des illustrations devra être positionnée en dessous de l'illustration, comme dans la Figure (\ref{logoCoSTIC}). Les équations devront être centrées et numérotées avec des chiffres arabes (par exemple Equation \ref{emc}).
+	
+	\begin{figure}[!ht]
+		\begin{center}
+			\includegraphics[height=2cm,clip=true]{Logo_CoSTIC.jpg}
+			\caption[Fig]{Logo de la CoSTIC}
+			\label{logoCoSTIC}
+		\end{center}
+	\end{figure}
+	
+	\begin{equation}
+		Ax+B=0\label{emc}
+	\end{equation}
+	
+	\begin{theoreme}
+		Un exemple de théorème. Les environnements suivants sont également disponibles : remarque, propriété, corollaire, définition, notation, proposition, exemple, preuve. Vous gérerez la numérotation vous-même.
+	\end{theoreme}
+	
+	\subsection{Tableau}
+	
+	Le titre du tableau devra être positionné sous le tableau (par exemple Tableau \ref{tableau}).
+	
+	\begin{table}[!ht]
+		\begin{center}
+			\begin{tabular}{lrr}
+				\hline
+				& \multicolumn{1}{c}{Colonne 1} & \multicolumn{1}{c}{Colonne 2}\\
+				\hline
+				Ligne 1 & L1C1 & L1C2\\
+				Ligne 2 & L2C1 & L2C2\\
+				\hline
+			\end{tabular}
+			\caption{Exemple de tableau}
+			\label{tableau}
+		\end{center}
+	\end{table}
+	
+	\subsection{Liste}
+	
+	Voici une liste :
+	
+	\begin{itemize}
+		\item remarque
+		\item propriété
+	\end{itemize}
+	
+	\section{Conclusions et perspectives}
+	
+	Le nombre de page est limité à 5,  bonne rédaction !
+	
+	% La bibliographie
+	
+	\bibliographystyle{plain}
+	
+	% Version "on-line" de la bibliographie, mais il est
+	% également possible d'utiliser un fichier ".bib" et d'utiliser BibTeX
+	
+	
+	\begin{thebibliography}{2}
+		
+		\bibitem{kirkpatrick83}
+		Scott Kirkpatrick, C~Daniel Gelatt, and Mario~P Vecchi.
+		\newblock Optimization by simmulated annealing.
+		\newblock \emph{science}, 220\penalty0 (4598):\penalty0 671--680, 1983.
+		
+		\bibitem{toth02}
+		Paolo Toth and Daniele Vigo.
+		\newblock \emph{The Vehicle Routing Problem}.
+		\newblock Monographs on Discrete Mathematics and Applications. Society for Industrial and Applied Mathematics, 2002.
+		
+		
+	\end{thebibliography}
+	
+	
+\end{document}

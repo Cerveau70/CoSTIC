@@ -6,19 +6,62 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "headers": [
+      {
+        "source": "**/*.@(js|css|html)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "**/*.docx",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          }
+        ]
+      },
+      {
+        "source": "**/*.tex",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-tex"
+          }
+        ]
+      },
+      {
+        "source": "**/*.zip",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/zip"
+          }
+        ]
+      },
+      {
+        "source": "**/*.pdf",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/pdf"
+          }
+        ]
+      }
+    ],
     "rewrites": [
+      {
+        "source": "/admin/**",
+        "destination": "/index.html"
+      },
       {
         "source": "**",
         "destination": "/index.html"
       }
-    ],
-    "headers": [
-  {
-    "source": "**/*.@(js|css|html)",
-    "headers": [
-      { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
     ]
-  }
-]
   }
 }

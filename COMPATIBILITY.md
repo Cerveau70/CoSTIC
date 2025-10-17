@@ -80,3 +80,5 @@ Les couleurs peuvent varier entre différents navigateurs (Chrome, Firefox, Edge
 
 ### Problème : Performance dégradée
 **Solution** : Optimiser les animations et utiliser `will-change` pour les éléments animés
+
+

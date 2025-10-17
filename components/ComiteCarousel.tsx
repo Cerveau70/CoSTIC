@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface ComiteMember {
   nom: string;
@@ -125,13 +125,41 @@ const comiteScientifique: ComiteMember[] = [
 ];
 
 const ComiteCarousel: React.FC = () => {
-  // Dupliquer les membres pour un défilement continu
-  const duplicatedMembers = [...comiteScientifique, ...comiteScientifique];
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+
+  // Une seule séquence; l'animation parcourt exactement sa largeur mesurée
+  const duplicatedMembers = comiteScientifique;
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const track = trackRef.current;
+    if (!container || !track) return;
+
+    const measure = () => {
+      let totalWidth = 0;
+      track.childNodes.forEach((node) => {
+        if (node instanceof HTMLElement) {
+          totalWidth += node.offsetWidth + 32; // space-x-8 ≈ 32px
+        }
+      });
+      const end = -(totalWidth);
+      const durationPerPixel = 0.045;
+      const duration = Math.max(30, Math.round(Math.abs(end) * durationPerPixel));
+      track.style.setProperty('--scroll-end', `${end}px`);
+      track.style.setProperty('--scroll-duration', `${duration}s`);
+    };
+
+    measure();
+    const resizeObserver = new ResizeObserver(() => measure());
+    resizeObserver.observe(container);
+    return () => resizeObserver.disconnect();
+  }, []);
 
   return (
-    <div className="relative max-w-7xl mx-auto overflow-hidden">
+    <div className="relative max-w-7xl mx-auto overflow-hidden" ref={containerRef}>
       {/* Défilement continu vers la droite */}
-      <div className="flex animate-scroll space-x-8">
+      <div className="flex animate-scroll-distance space-x-8 whitespace-nowrap" ref={trackRef}>
         {duplicatedMembers.map((member, index) => (
           <div
             key={`${member.nom}-${index}`}

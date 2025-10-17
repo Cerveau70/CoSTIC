@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
 
@@ -6,6 +7,7 @@ const Footer: React.FC = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useTranslation();
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,13 +24,13 @@ const Footer: React.FC = () => {
         source: 'website_footer'
       });
 
-      setMessage('Merci pour votre inscription à notre newsletter !');
+      setMessage(t('footer_newsletter_success'));
       setEmail('');
       setTimeout(() => setMessage(''), 5000);
 
     } catch (error) {
       console.error('Erreur lors de l\'inscription à la newsletter:', error);
-      setMessage('Erreur lors de l\'inscription. Veuillez réessayer.');
+      setMessage(t('footer_newsletter_error'));
       setTimeout(() => setMessage(''), 3000);
     } finally {
       setIsSubmitting(false);
@@ -85,24 +87,24 @@ const Footer: React.FC = () => {
                 </div>
               </div>
             </h3>
-            <p className="text-sm text-neutral-300">Organisé par l'École Supérieure Africaine des TIC (ESATIC)</p>
+            <p className="text-sm text-neutral-300">{t('footer_org_by')}</p>
           </div>
           <div className="text-sm">
-            <h3 className="text-xl font-bold mb-2 text-white font-sans">Contact</h3>
-            <p className="text-neutral-300">Secrétariat du Comité Scientifique</p>
+            <h3 className="text-xl font-bold mb-2 text-white font-sans">{t('footer_contact')}</h3>
+            <p className="text-neutral-300">{t('footer_secretariat')}</p>
             <a href="mailto:costic2026@esatic.edu.ci" className="text-secondary hover:text-white transition-colors duration-300 block">costic2026@esatic.edu.ci</a>
             <a href="http://costic2026.esatic.ci" target="_blank" rel="noopener noreferrer" className="text-secondary hover:text-white transition-colors duration-300">http://costic2026.esatic.ci</a>
           </div>
           <div>
-            <h3 className="text-xl font-bold mb-2 text-white font-sans">Restez Informé</h3>
-            <p className="text-sm text-neutral-300 mb-4">Abonnez-vous à notre newsletter pour recevoir les dernières actualités.</p>
+            <h3 className="text-xl font-bold mb-2 text-white font-sans">{t('footer_stay_informed')}</h3>
+            <p className="text-sm text-neutral-300 mb-4">{t('footer_newsletter_desc')}</p>
             <form onSubmit={handleNewsletterSubmit}>
               <div className="flex items-center">
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Votre adresse e-mail"
+                  placeholder={t('footer_email_placeholder') || 'Votre adresse e-mail'}
                   className="bg-secondary/20 border-2 border-secondary/50 rounded-l-lg px-4 py-3 w-full text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition"
                   required
                 />
