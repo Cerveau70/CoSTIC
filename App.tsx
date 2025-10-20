@@ -6,6 +6,7 @@ import Section from './components/Section';
 import TimelineItem from './components/TimelineItem';
 import AdvancedCalendar from './components/AdvancedCalendar';
 import ComiteCarousel from './components/ComiteCarousel';
+import PartenairesCarousel from './components/PartenairesCarousel';
 import UnifiedPartenairesCarousel from './components/UnifiedPartenairesCarousel';
 import ResultatsCarousel from './components/ResultatsCarousel';
 import SocialMediaSticky from './components/SocialMediaSticky';
@@ -942,7 +943,7 @@ const App: React.FC = () => {
                   </p>
                 </div>
 
-                <UnifiedPartenairesCarousel />
+                <PartenairesCarousel />
 
                 {/* Détails des partenaires */}
                 <div className="mt-12 grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
