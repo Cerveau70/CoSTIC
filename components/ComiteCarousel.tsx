@@ -144,8 +144,8 @@ const ComiteCarousel: React.FC = () => {
         }
       });
       const end = -(totalWidth);
-      const durationPerPixel = 0.045;
-      const duration = Math.max(30, Math.round(Math.abs(end) * durationPerPixel));
+      const durationPerPixel = 0.015;
+      const duration = Math.max(10, Math.round(Math.abs(end) * durationPerPixel));
       track.style.setProperty('--scroll-end', `${end}px`);
       track.style.setProperty('--scroll-duration', `${duration}s`);
     };

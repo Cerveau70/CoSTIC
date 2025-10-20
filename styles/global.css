@@ -214,10 +214,10 @@ body {
 }
 
 .animate-scroll-distance {
-  animation: scroll-distance var(--scroll-duration, 60s) linear infinite;
-  -webkit-animation: scroll-distance var(--scroll-duration, 60s) linear infinite;
-  -moz-animation: scroll-distance var(--scroll-duration, 60s) linear infinite;
-  -o-animation: scroll-distance var(--scroll-duration, 60s) linear infinite;
+  animation: scroll-distance var(--scroll-duration, 20s) linear infinite;
+  -webkit-animation: scroll-distance var(--scroll-duration, 20s) linear infinite;
+  -moz-animation: scroll-distance var(--scroll-duration, 20s) linear infinite;
+  -o-animation: scroll-distance var(--scroll-duration, 20s) linear infinite;
 }
 
 .animate-scroll-distance:hover {

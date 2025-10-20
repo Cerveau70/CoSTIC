@@ -143,15 +143,26 @@ const AdminDashboard: React.FC = () => {
               <h1 className="text-2xl font-bold font-sans">Dashboard Administrateur</h1>
               <p className="text-neutral-200">CoSTIC 2026 - Gestion du Colloque</p>
             </div>
-            <button
-              onClick={handleLogout}
-              className="bg-secondary hover:bg-secondary/90 text-white px-4 py-2 rounded-lg transition-colors duration-300 flex items-center space-x-2"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              <span>Déconnexion</span>
-            </button>
+            <div className="flex space-x-3">
+              <a
+                href="/"
+                className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors duration-300 flex items-center space-x-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                <span>Accueil</span>
+              </a>
+              <button
+                onClick={handleLogout}
+                className="bg-secondary hover:bg-secondary/90 text-white px-4 py-2 rounded-lg transition-colors duration-300 flex items-center space-x-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span>Déconnexion</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -335,31 +346,55 @@ const AdminDashboard: React.FC = () => {
           {activeTab === 'templates' && (
             <div className="bg-white shadow-lg rounded-lg overflow-hidden">
               <div className="px-6 py-4 border-b border-neutral-200">
-                <h2 className="text-xl font-bold text-neutral-900 font-sans">Téléchargements des Modèles</h2>
-                <p className="text-neutral-600">Statistiques et historique des téléchargements (DOCX et LaTeX)</p>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h2 className="text-xl font-bold text-neutral-900 font-sans">Téléchargements des Modèles</h2>
+                    <p className="text-neutral-600">Statistiques et historique des téléchargements (DOCX et LaTeX)</p>
+                  </div>
+                  <button
+                    onClick={loadData}
+                    className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors flex items-center space-x-2"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <span>Actualiser</span>
+                  </button>
+                </div>
               </div>
 
               {/* Statistiques globales */}
-              <div className="px-6 py-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="rounded-lg border border-neutral-200 p-4">
-                  <div className="text-sm text-neutral-500">Total DOCX</div>
-                  <div className="text-2xl font-bold text-primary">
+              <div className="px-6 py-4 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="rounded-lg border border-neutral-200 p-4 bg-blue-50">
+                  <div className="text-sm text-blue-600 font-medium">Total DOCX</div>
+                  <div className="text-2xl font-bold text-blue-700">
                     {templateDownloads.filter(t => t.format === 'docx').length}
                   </div>
                 </div>
-                <div className="rounded-lg border border-neutral-200 p-4">
-                  <div className="text-sm text-neutral-500">Total LaTeX</div>
-                  <div className="text-2xl font-bold text-secondary">
+                <div className="rounded-lg border border-neutral-200 p-4 bg-green-50">
+                  <div className="text-sm text-green-600 font-medium">Total LaTeX</div>
+                  <div className="text-2xl font-bold text-green-700">
                     {templateDownloads.filter(t => t.format === 'latex').length}
                   </div>
                 </div>
-                <div className="rounded-lg border border-neutral-200 p-4">
-                  <div className="text-sm text-neutral-500">Total</div>
+                <div className="rounded-lg border border-neutral-200 p-4 bg-neutral-50">
+                  <div className="text-sm text-neutral-600 font-medium">Total</div>
                   <div className="text-2xl font-bold text-neutral-800">
                     {templateDownloads.length}
                   </div>
                 </div>
+                <div className="rounded-lg border border-neutral-200 p-4 bg-purple-50">
+                  <div className="text-sm text-purple-600 font-medium">Aujourd'hui</div>
+                  <div className="text-2xl font-bold text-purple-700">
+                    {templateDownloads.filter(t => {
+                      const today = new Date();
+                      const downloadDate = t.downloadedAt?.toDate ? t.downloadedAt.toDate() : new Date(t.downloadedAt);
+                      return downloadDate.toDateString() === today.toDateString();
+                    }).length}
+                  </div>
+                </div>
               </div>
+
 
               {/* Historique détaillé */}
               <div className="overflow-x-auto">

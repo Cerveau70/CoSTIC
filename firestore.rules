@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Soumissions d'articles - lecture publique, écriture publique
+    match /submissions/{document} {
+      allow read, write: if true;
+    }
+    
+    // Inscriptions - lecture publique, écriture publique
+    match /registrations/{document} {
+      allow read, write: if true;
+    }
+    
+    // Newsletter - lecture publique, écriture publique
+    match /newsletter_subscriptions/{document} {
+      allow read, write: if true;
+    }
+    
+    // Visiteurs - lecture publique, écriture publique
+    match /visitors/{document} {
+      allow read, write: if true;
+    }
+    
+    // Téléchargements de modèles - lecture publique, écriture publique
+    match /templateDownloads/{document} {
+      allow read, write: if true;
+    }
+    
+    // Partenaires - lecture publique, écriture publique
+    match /partenaires/{document} {
+      allow read, write: if true;
+    }
+    
+    // Tests - lecture publique, écriture publique (pour debug)
+    match /test/{document} {
+      allow read, write: if true;
+    }
+  }
+}

@@ -28,7 +28,16 @@ const PartenaireForm: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState('');
-  const { t } = useTranslation();
+  const { t, ready } = useTranslation();
+
+  // Attendre que les traductions soient chargées
+  if (!ready) {
+    return (
+      <div className="flex justify-center items-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

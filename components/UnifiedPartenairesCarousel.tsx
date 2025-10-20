@@ -1,132 +1,103 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../firebase';
+import { partenairesDefaut } from '../config/partenaires';
 
 interface Partenaire {
+  id: string;
   nom: string;
   description: string;
   logo: string;
   type: string;
   site?: string;
+  pays: string;
+  source: 'statique' | 'firebase';
+  statut?: 'en_attente' | 'approuve' | 'rejete';
 }
 
-const partenaires: Partenaire[] = [
-  {
-    nom: "MTND",
-    description: "MTND",
-    logo: "/img/ministere-transition-numerique.png",
-    type: "Institutionnel",
-    site: "https://www.transition-numerique.gouv.ci"
-  },
-  {
-    nom: "MESR",
-    description: "MESR",
-    logo: "/img/mesr.jpg",
-    type: "Institutionnel",
-    site: "https://www.enseignement.gouv.ci"
-  },
-  {
-    nom: "SNDI",
-    description: "SNDI",
-    logo: "/img/sndi.png",
-    type: "Développement",
-    site: "https://www.sndi.ci"
-  },
-  {
-    nom: "ARTCI",
-    description: "ARTCI",
-    logo: "/img/artci.png",
-    type: "Régulation",
-    site: "https://www.artci.ci"
-  },
-  {
-    nom: "ANSUT",
-    description: "ANSUT",
-    logo: "/img/ansut.png",
-    type: "Institutionnel",
-    site: "https://ansut.ci"
-  },
-  {
-    nom: "AIGF",
-    description: "AIGF",
-    logo: "/img/aigf.png",
-    type: "Institutionnel",
-    site: "https://www.aigf.ci"
-  },
-  {
-    nom: "VITIB",
-    description: "VITIB",
-    logo: "/img/vitib.jpg",
-    type: "Technologie",
-    site: "https://www.vitib.ci"
-  },
-  {
-    nom: "Fondation Jeunesse Numérique",
-    description: "Fondation Jeunesse Numérique",
-    logo: "/img/fondation-jeunesse-numerique.png",
-    type: "Développement",
-    site: "https://www.fondation-jeunesse-numerique.ci"
-  },
-  {
-    nom: "AUF",
-    description: "AUF",
-    logo: "/img/AUF - Agence Universitaire de la Francophonie.png",
-    type: "International",
-    site: "https://www.auf.org"
-  },
-  {
-    nom: "ONUDI",
-    description: "ONUDI",
-    logo: "/img/onudi.png",
-    type: "International",
-    site: "https://www.unido.org"
-  },
-  {
-    nom: "Smart Africa",
-    description: "Smart Africa Alliance",
-    logo: "/img/smart.png",
-    type: "International",
-    site: "https://smartafrica.org"
-  },
-  {
-    nom: "UNITEL",
-    description: "UNITEL",
-    logo: "/img/unitel.png",
-    type: "Télécoms",
-    site: "https://www.unitel.ci"
-  },
-  {
-    nom: "Huawei",
-    description: "Technologies et Solutions TIC",
-    logo: "/img/huawei.png",
-    type: "Technologie",
-    site: "https://www.huawei.com"
-  }
-];
-
-const PartenairesCarousel: React.FC = () => {
+const UnifiedPartenairesCarousel: React.FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
+  const [partenaires, setPartenaires] = useState<Partenaire[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Une seule séquence; l'animation parcourt exactement sa largeur mesurée
-  const duplicatedPartners = partenaires;
+  useEffect(() => {
+    fetchAllPartenaires();
+  }, []);
+
+  const fetchAllPartenaires = async () => {
+    try {
+      // Récupérer les partenaires depuis Firebase (seulement ceux approuvés)
+      const querySnapshot = await getDocs(collection(db, "partenaires"));
+      const partenairesFirebase = querySnapshot.docs
+        .map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+        .filter((p: any) => p.statut === 'approuve')
+        .map((p: any) => ({
+          id: p.id,
+          nom: p.nom,
+          description: p.description,
+          logo: p.logoUrl || '/img/default-logo.png',
+          type: p.typePartenaire,
+          site: p.siteWeb,
+          pays: p.pays,
+          source: 'firebase' as const,
+          statut: p.statut
+        }));
+
+      // Convertir les partenaires statiques
+      const partenairesStatiques = partenairesDefaut.map((partenaire, index) => ({
+        id: `statique-${index}`,
+        nom: partenaire.name,
+        description: partenaire.name,
+        logo: partenaire.logo,
+        type: 'Institutionnel',
+        site: partenaire.siteWeb,
+        pays: partenaire.pays,
+        source: 'statique' as const,
+        statut: 'approuve' as const
+      }));
+
+      // Combiner tous les partenaires
+      const tousPartenaires = [...partenairesStatiques, ...partenairesFirebase];
+      setPartenaires(tousPartenaires);
+    } catch (error) {
+      console.error('Erreur lors du chargement des partenaires:', error);
+      // En cas d'erreur, utiliser seulement les partenaires statiques
+      const partenairesStatiques = partenairesDefaut.map((partenaire, index) => ({
+        id: `statique-${index}`,
+        nom: partenaire.name,
+        description: partenaire.name,
+        logo: partenaire.logo,
+        type: 'Institutionnel',
+        site: partenaire.siteWeb,
+        pays: partenaire.pays,
+        source: 'statique' as const,
+        statut: 'approuve' as const
+      }));
+      setPartenaires(partenairesStatiques);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const container = containerRef.current;
     const track = trackRef.current;
-    if (!container || !track) return;
+    if (!container || !track || partenaires.length === 0) return;
 
     const measure = () => {
       const containerWidth = container.clientWidth;
-      // largeur totale de la piste (somme des cartes + espace)
       let totalWidth = 0;
       track.childNodes.forEach((node) => {
         if (node instanceof HTMLElement) {
-          totalWidth += node.offsetWidth + 32; // space-x-8 ≈ 32px
+          totalWidth += node.offsetWidth + 32;
         }
       });
-      // fin de translation = - (totalWidth)
-      // pour éviter un espace vide, on ajoute un petit tampon
       const end = -(totalWidth);
-      const durationPerPixel = 0.01; // secondes par pixel (vitesse très rapide)
+      const durationPerPixel = 0.01;
       const duration = Math.max(8, Math.round(Math.abs(end) * durationPerPixel));
       track.style.setProperty('--scroll-end', `${end}px`);
       track.style.setProperty('--scroll-duration', `${duration}s`);
@@ -136,7 +107,7 @@ const PartenairesCarousel: React.FC = () => {
     const resizeObserver = new ResizeObserver(() => measure());
     resizeObserver.observe(container);
     return () => resizeObserver.disconnect();
-  }, []);
+  }, [partenaires]);
 
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -171,16 +142,22 @@ const PartenairesCarousel: React.FC = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative max-w-7xl mx-auto overflow-hidden" ref={containerRef}>
-      {/* Défilement continu vers la droite */}
       <div className="flex animate-scroll-distance space-x-8 whitespace-nowrap" ref={trackRef}>
-        {duplicatedPartners.map((partenaire, index) => (
+        {partenaires.map((partenaire, index) => (
           <div
             key={`${partenaire.nom}-${index}`}
             className="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 p-6 text-center"
           >
-            {/* Logo */}
             <div className="relative mb-4">
               <div className="w-20 h-20 mx-auto bg-white rounded-lg border-2 border-neutral-200 flex items-center justify-center p-2">
                 <img
@@ -188,7 +165,6 @@ const PartenairesCarousel: React.FC = () => {
                   alt={partenaire.nom}
                   className="max-w-full max-h-full object-contain"
                   onError={(e) => {
-                    // Fallback si l'image ne charge pas
                     const target = e.target as HTMLImageElement;
                     target.style.display = 'none';
                     target.parentElement!.innerHTML = `
@@ -203,22 +179,18 @@ const PartenairesCarousel: React.FC = () => {
               </div>
             </div>
 
-            {/* Nom et Type */}
             <h3 className="text-lg font-bold text-primary mb-2 font-sans leading-tight">
               {partenaire.nom}
             </h3>
 
-            {/* Badge Type */}
             <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border ${getTypeColor(partenaire.type)} mb-2`}>
               {partenaire.type}
             </span>
 
-            {/* Description */}
             <p className="text-sm text-neutral-600">
               {partenaire.description}
             </p>
 
-            {/* Lien vers le site (si disponible) */}
             {partenaire.site && (
               <a
                 href={partenaire.site}
@@ -236,5 +208,4 @@ const PartenairesCarousel: React.FC = () => {
   );
 };
 
-export default PartenairesCarousel;
-
+export default UnifiedPartenairesCarousel;

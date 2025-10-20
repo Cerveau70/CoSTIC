@@ -6,10 +6,11 @@ import Section from './components/Section';
 import TimelineItem from './components/TimelineItem';
 import AdvancedCalendar from './components/AdvancedCalendar';
 import ComiteCarousel from './components/ComiteCarousel';
-import PartenairesCarousel from './components/PartenairesCarousel';
+import UnifiedPartenairesCarousel from './components/UnifiedPartenairesCarousel';
 import ResultatsCarousel from './components/ResultatsCarousel';
 import SocialMediaSticky from './components/SocialMediaSticky';
 import PartenaireForm from './components/PartenaireForm';
+import VisitorCounterSticky from './components/VisitorCounterSticky';
 import { partenairesDefaut } from './config/partenaires';
 import { TimelineEvent } from './types';
 import { db, storage } from './firebase';
@@ -369,8 +370,8 @@ const App: React.FC = () => {
         }
       });
       const end = -(totalWidth);
-      const durationPerPixel = 0.04; // secondes par pixel
-      const duration = Math.max(30, Math.round(Math.abs(end) * durationPerPixel));
+      const durationPerPixel = 0.015; // secondes par pixel (vitesse très rapide)
+      const duration = Math.max(10, Math.round(Math.abs(end) * durationPerPixel));
       track.style.setProperty('--scroll-end', `${end}px`);
       track.style.setProperty('--scroll-duration', `${duration}s`);
     };
@@ -395,6 +396,7 @@ const App: React.FC = () => {
     <div className="bg-neutral-100 font-body">
       <Header />
       <SocialMediaSticky />
+      <VisitorCounterSticky />
       <main>
         {/* Hero Section */}
         <section id="accueil" className="relative text-white pt-32 pb-24 text-center overflow-hidden flex flex-col items-center justify-center min-h-screen">
@@ -413,7 +415,7 @@ const App: React.FC = () => {
                     // Ici on vise un cycle complet = largeur totale d'une liste
                     // -100% est une approximation avant mesure
                     ['--scroll-end' as any]: '-100%',
-                    ['--scroll-duration' as any]: '60s'
+                    ['--scroll-duration' as any]: '20s'
                   }}
                   ref={universitiesTrackRef}
                 >
@@ -512,6 +514,7 @@ const App: React.FC = () => {
               <span className="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>{t('date_value')}</span>
               <span className="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>{t('place_value')}</span>
             </div>
+
 
 
 
@@ -939,7 +942,7 @@ const App: React.FC = () => {
                   </p>
                 </div>
 
-                <PartenairesCarousel />
+                <UnifiedPartenairesCarousel />
 
                 {/* Détails des partenaires */}
                 <div className="mt-12 grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
