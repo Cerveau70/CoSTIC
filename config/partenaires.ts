@@ -9,6 +9,14 @@ export interface Partenaire {
 
 export const partenairesDefaut: Partenaire[] = [
   {
+    name: 'ESATIC',
+    logo: '/img/esatic.png',
+    siteWeb: 'https://esatic.ci',
+    pays: 'Côte d\'Ivoire',
+    bgColor: 'bg-partner-primary',
+    hoverColor: 'hover:bg-partner-primary-hover'
+  },
+  {
     name: 'INPHB',
     logo: '/img/in.png',
     siteWeb: 'https://inphb.ci',

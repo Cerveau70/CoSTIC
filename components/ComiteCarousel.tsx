@@ -10,116 +10,106 @@ interface ComiteMember {
 }
 
 const comiteScientifique: ComiteMember[] = [
+  // Président
   {
-    nom: "Pr. Oumtanaga Souleymane",
-    affiliation: "INPHB",
+    nom: "Prof. Coulibaly Adama",
+    affiliation: "Université Félix Houphouët-Boigny",
+    pays: "Côte d'Ivoire",
+    drapeau: "🇨🇮",
+    photo: "/img/cool.jpg",
+    titre: "Président - Mathématicien"
+  },
+  // Vice-Président
+  {
+    nom: "Prof. Asséu Olivier",
+    affiliation: "MESRS / ESATIC",
+    pays: "Côte d'Ivoire",
+    drapeau: "🇨🇮",
+    photo: "/img/olivier.jpg",
+    titre: "Vice-Président"
+  },
+  //Membres - Côte d'Ivoire
+  {
+    nom: "Prof. Oumtanaga Souleymane",
+    affiliation: "INP-HB",
     pays: "Côte d'Ivoire",
     drapeau: "🇨🇮",
     photo: "/img/oumtanaga.jpg",
     titre: "Professeur"
   },
   {
-    nom: "Dr (MC) Diaby Moustapha",
+    nom: "Prof. Hili Ouagnina",
+    affiliation: "INP-HB",
+    pays: "Côte d'Ivoire",
+    drapeau: "🇨🇮",
+    photo: "/img/Prof. Hili Ouagnina.jpeg",
+    titre: "Professeur"
+  },
+  {
+    nom: "Dr(MC) Soro Étienne",
     affiliation: "ESATIC",
     pays: "Côte d'Ivoire",
     drapeau: "🇨🇮",
-    photo: "/img/diaby.jpg",
-    titre: "Maître de Conférences"
+    photo: "/img/etienne.jpg",
+    titre: "Docteur"
   },
   {
-    nom: "Dr. Diarra Mamadou",
+    nom: "Dr(MC) Moustapha Diaby",
+    affiliation: "ESATIC / Université de Lille",
+    pays: "Côte d'Ivoire / France",
+    drapeau: "🇨🇮",
+    photo: "/img/diaby.jpg",
+    titre: "Rapporteur Général"
+  },
+  {
+    nom: "Dr(MC) Kamagaté Beman",
+    affiliation: "ESATIC",
+    pays: "Côte d'Ivoire",
+    drapeau: "🇨🇮",
+    photo: "/img/beman.jpg",
+    titre: "Docteur"
+  },
+
+  {
+    nom: "Dr(MC) Mamadou Diarra",
     affiliation: "UFHB",
     pays: "Côte d'Ivoire",
     drapeau: "🇨🇮",
     photo: "/img/Dr_Diarra_Mamadou.jpg",
     titre: "Docteur"
   },
-  // {
-  //   nom: "Dr. Kamagaté Beman",
-  //   affiliation: "ESATIC",
-  //   pays: "Côte d'Ivoire",
-  //   drapeau: "🇨🇮",
-  //   photo: "/img/Dr. Kamagaté Beman (ESATIC, Côte d’Ivoire.jpg",
-  //   titre: "Docteur"
-  // },
-  // {
-  //   nom: "Dr. Kouakou Konan",
-  //   affiliation: "UVCI",
-  //   pays: "Côte d'Ivoire",
-  //   drapeau: "🇨🇮",
-  //   photo: "",
-  //   titre: "Docteur"
-  // },
-  // {
-  //   nom: "Pr. Kouadio N'Guessan",
-  //   affiliation: "Université Nangui Abrogoua",
-  //   pays: "Côte d'Ivoire",
-  //   drapeau: "🇨🇮",
-  //   photo: "",
-  //   titre: "Professeur"
-  // },
-  // {
-  //   nom: "Dr. Konaté Moussa",
-  //   affiliation: "Université de San Pedro",
-  //   pays: "Côte d'Ivoire",
-  //   drapeau: "🇨🇮",
-  //   photo: "/img/Dr. Konaté Moussa.jpg",
-  //   titre: "Docteur"
-  // },
-  // {
-  //   nom: "Pr. Abdoulaye Cissé",
-  //   affiliation: "Université Nazi Boni",
-  //   pays: "Burkina Faso",
-  //   drapeau: "🇧🇫",
-  //   photo: "",
-  //   titre: "Professeur"
-  // },
-  // {
-  //   nom: "Dr. Kaboré Lassina",
-  //   affiliation: "Université Joseph Ki-Zerbo",
-  //   pays: "Burkina Faso",
-  //   drapeau: "🇧🇫",
-  //   photo: "",
-  //   titre: "Docteur"
-  // },
-  // {
-  //   nom: "Dr. Seydou Traoré",
-  //   affiliation: "USTTB",
-  //   pays: "Mali",
-  //   drapeau: "🇲🇱",
-  //   photo: "",
-  //   titre: "Docteur"
-  // },
-  // {
-  //   nom: "Pr. Alioune Ngom",
-  //   affiliation: "Université Gaston Berger",
-  //   pays: "Sénégal",
-  //   drapeau: "🇸🇳",
-  //   photo: "",
-  //   titre: "Professeur"
-  // },
-  // {
-  //   nom: "Dr. Aminata Fall",
-  //   affiliation: "UCAD",
-  //   pays: "Sénégal",
-  //   drapeau: "🇸🇳",
-  //   photo: "",
-  //   titre: "Docteur"
-  // },
-  // {
-  //   nom: "Dr. Fatoumata Diallo",
-  //   affiliation: "Université de Conakry",
-  //   pays: "Guinée",
-  //   drapeau: "🇬🇳",
-  //   photo: "",
-  //   titre: "Docteur"
-  // },
   {
-    nom: "Pr. Hamadou Saliah-Hassane",
-    affiliation: "UQAM",
-    pays: "Niger/Canada",
-    drapeau: "🇳🇪🇨🇦",
-    photo: "/img/Pr. Hamadou Saliah-Hassane (UQAM, Niger_Canada).jpg",
+    nom: "Dr(MC) Sere Aboulaye",
+    affiliation: "Université Nazi Boni",
+    pays: "Burkina Faso",
+    drapeau: "🇧🇫",
+    photo: "/img/sere.jpg",
+    titre: "Docteur"
+  },
+  // Afrique
+  {
+    nom: "Prof. Babacar",
+    affiliation: "Université Cheikh Anta Diop (UCAD)",
+    pays: "Sénégal",
+    drapeau: "🇸🇳",
+    photo: "/img/abacarr.jpg",
+    titre: "Professeur"
+  },
+  {
+    nom: "Prof. Leila Nasraoui",
+    affiliation: "Université de Tunis El Manar",
+    pays: "Tunisie",
+    drapeau: "🇹🇳",
+    photo: "/img/Leila Nasraoui.jpg",
+    titre: "Professeur"
+  },
+  // Europe
+  {
+    nom: "Prof. Yvon Kermarec",
+    affiliation: "Institut Mines-Télécom (IMT)",
+    pays: "France",
+    drapeau: "🇫🇷",
+    photo: "/img/Prof. Yvon Kermarec.jpg",
     titre: "Professeur"
   }
 ];
@@ -128,8 +118,8 @@ const ComiteCarousel: React.FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
 
-  // Une seule séquence; l'animation parcourt exactement sa largeur mesurée
-  const duplicatedMembers = comiteScientifique;
+  // Créer une boucle continue en ajoutant tous les éléments à la fin
+  const duplicatedMembers = [...comiteScientifique, ...comiteScientifique];
 
   useEffect(() => {
     const container = containerRef.current;

@@ -106,8 +106,8 @@ const PartenairesCarousel: React.FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
 
-  // Une seule séquence; l'animation parcourt exactement sa largeur mesurée
-  const duplicatedPartners = partenaires;
+  // Créer une boucle continue en ajoutant tous les éléments à la fin
+  const duplicatedPartners = [...partenaires, ...partenaires];
 
   useEffect(() => {
     const container = containerRef.current;

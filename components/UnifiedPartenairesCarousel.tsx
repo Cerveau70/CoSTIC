@@ -150,10 +150,13 @@ const UnifiedPartenairesCarousel: React.FC = () => {
     );
   }
 
+  // Créer une boucle continue en ajoutant tous les éléments à la fin
+  const duplicatedPartenaires = [...partenaires, ...partenaires];
+
   return (
     <div className="relative max-w-7xl mx-auto overflow-hidden" ref={containerRef}>
       <div className="flex animate-scroll-distance space-x-8 whitespace-nowrap" ref={trackRef}>
-        {partenaires.map((partenaire, index) => (
+        {duplicatedPartenaires.map((partenaire, index) => (
           <div
             key={`${partenaire.nom}-${index}`}
             className="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 p-6 text-center"
@@ -209,3 +212,5 @@ const UnifiedPartenairesCarousel: React.FC = () => {
 };
 
 export default UnifiedPartenairesCarousel;
+
+

@@ -16,13 +16,20 @@ const SubmissionModal: React.FC<SubmissionModalProps> = ({ isOpen, onClose }) =>
   const [submissionStatus, setSubmissionStatus] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const conferenceThemes = [
-    { title: 'Intelligence Artificielle, Big Data et Machine Learning' },
+  const conferenceTracks = [
+    { title: 'Intelligence Artificielle et Machine Learning' },
+    { title: 'Big Data et Analytics' },
     { title: 'Cybersécurité et Résilience des Réseaux' },
     { title: 'Internet des Objets (IoT) et Systèmes Embarqués' },
     { title: 'Cloud Computing et Infrastructures Numériques' },
+    { title: 'Blockchain et Technologies Fintech' },
     { title: 'Transformation digitale et gouvernance numérique' },
     { title: 'Technologies éducatives et pédagogie numérique' },
+    { title: 'Télémédecine et Santé numérique' },
+    { title: 'Agriculture numérique et Smart Farming' },
+    { title: 'Villes intelligentes et Mobilité' },
+    { title: 'Environnement et Technologies vertes' },
+    { title: 'Autre' }
   ];
 
   const handleSubmissionChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -126,10 +133,10 @@ const SubmissionModal: React.FC<SubmissionModalProps> = ({ isOpen, onClose }) =>
               </div>
 
               <div>
-                <label htmlFor="themeSelect" className={labelStyle}>Thématique</label>
+                <label htmlFor="themeSelect" className={labelStyle}>Track/Thématique</label>
                 <select id="themeSelect" value={submission.themeSelect} onChange={handleSubmissionChange} className={inputStyle} disabled={isSubmitting}>
-                  <option value="">Choisissez une thématique...</option>
-                  {conferenceThemes.map(theme => <option key={theme.title} value={theme.title}>{theme.title}</option>)}
+                  <option value="">Sélectionnez un track...</option>
+                  {conferenceTracks.map(track => <option key={track.title} value={track.title}>{track.title}</option>)}
                 </select>
               </div>
 
