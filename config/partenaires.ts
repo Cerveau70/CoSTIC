@@ -167,5 +167,13 @@ export const partenairesDefaut: Partenaire[] = [
     pays: 'Sénégal',
     bgColor: 'bg-partner-emerald',
     hoverColor: 'hover:bg-partner-emerald-hover'
+  },
+  {
+    name: 'Tubman University',
+    logo: '/img/tu.jpg',
+    siteWeb: 'https://www.tubmanu.edu.lr/',
+    pays: 'Libéria',
+    bgColor: 'bg-partner-emerald',
+    hoverColor: 'hover:bg-partner-emerald-hover'
   }
 ];
