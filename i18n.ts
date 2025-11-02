@@ -7,7 +7,7 @@ const fr = {
   translation: {
     // Hero Section
     hero_subtitle: "Colloque Scientifique sur les Technologies de l'Information et de la Communication",
-    date_value: "21-22-23 Mai 2026",
+    date_value: "20-21-22 Mai 2026",
     theme_value: "Technologies de l'Information et de la Communication pour le Développement Durable en Afrique",
     place_value: "ESATIC, Abidjan, Côte d'Ivoire",
     organizer_value: "Organisé par LASTIC",
@@ -29,7 +29,7 @@ const fr = {
     tl_3_desc: "Notification aux auteurs",
     tl_4_date: "15 Avril 2026",
     tl_4_desc: "Soumission des versions finales",
-    tl_5_date: "21-22-23 Mai 2026",
+    tl_5_date: "20-21-22 Mai 2026",
     tl_5_desc: "Colloque CoSTIC 2026 (ESATIC – Abidjan)",
 
     // Lieu et Date
@@ -104,7 +104,7 @@ const fr = {
     thematic_cyber: "Cybersécurité & Systèmes d'Information",
     thematic_cyber_responsibles: "Dr(MC) Kamagaté Beman, Dr(MC) Soro Étienne",
     thematic_governance: "Gouvernance & Politiques Numériques",
-    thematic_governance_responsibles: "Prof. Oumtanaga Souleymane, Prof. Asséu Olivier",
+    thematic_governance_responsibles: "Prof. Oumtanaga Souleymane, Prof. Asseu Olivier",
     thematic_coordination: "Coordination Scientifique & Évaluation",
     thematic_coordination_responsibles: "Dr(MC) Moustapha Diaby, Prof. Coulibaly Adama",
     partnerships_title: "Partenariats",
@@ -183,7 +183,7 @@ const en = {
   translation: {
     // Hero Section
     hero_subtitle: "Scientific Conference on Information and Communication Technologies",
-    date_value: "May 21-22-23, 2026",
+    date_value: "May 20-21-22, 2026",
     theme_value: "Information and Communication Technologies for Sustainable Development in Africa",
     place_value: "ESATIC, Abidjan, Côte d'Ivoire",
     organizer_value: "Organized by LASTIC",
@@ -205,7 +205,7 @@ const en = {
     tl_3_desc: "Author notification",
     tl_4_date: "April 15, 2026",
     tl_4_desc: "Final version submission",
-    tl_5_date: "May 21-22-23, 2026",
+    tl_5_date: "May 20-21-22, 2026",
     tl_5_desc: "CoSTIC 2026 Conference (ESATIC – Abidjan)",
 
     // Lieu et Date
@@ -280,7 +280,7 @@ const en = {
     thematic_cyber: "Cybersecurity & Information Systems",
     thematic_cyber_responsibles: "Dr(MC) Kamagaté Beman, Dr(MC) Soro Étienne",
     thematic_governance: "Digital Governance & Policies",
-    thematic_governance_responsibles: "Prof. Oumtanaga Souleymane, Prof. Asséu Olivier",
+    thematic_governance_responsibles: "Prof. Oumtanaga Souleymane, Prof. Asseu Olivier",
     thematic_coordination: "Scientific Coordination & Evaluation",
     thematic_coordination_responsibles: "Dr(MC) Moustapha Diaby, Prof. Coulibaly Adama",
     partnerships_title: "Partnerships",

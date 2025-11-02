@@ -74,7 +74,7 @@ export const partenairesDefaut: Partenaire[] = [
   },
   {
     name: 'IRMA',
-    logo: '/img/irma.png',
+    logo: '/img/irma.jpg',
     siteWeb: 'https://irma.ci',
     pays: 'Côte d\'Ivoire',
     bgColor: 'bg-partner-emerald',
@@ -98,7 +98,7 @@ export const partenairesDefaut: Partenaire[] = [
   },
   {
     name: 'UFR MATHS',
-    logo: '/img/ufr.jpg',
+    logo: '/img/maths.jpg',
     siteWeb: 'https://ufr-math-info.ci',
     pays: 'Côte d\'Ivoire',
     bgColor: 'bg-partner-violet',

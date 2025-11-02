@@ -99,6 +99,20 @@ const partenaires: Partenaire[] = [
     logo: "/img/huawei.png",
     type: "Technologie",
     site: "https://www.huawei.com"
+  },
+  {
+    nom: "Sah Analytics",
+    description: "Technologies et Solutions TIC",
+    logo: "/img/sah.jpg",
+    type: "Technologie",
+    site: "https://sahanalytics.com/"
+  },
+  {
+    nom: "UIT",
+    description: "Union internationale des télécommunications",
+    logo: "/img/itu.png",
+    type: "Technologie",
+    site: "https://www.itu.int"
   }
 ];
 

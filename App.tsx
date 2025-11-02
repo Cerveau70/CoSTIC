@@ -126,18 +126,19 @@ const CountdownTimer: React.FC = () => {
 // Mock data for timeline events now built inside component with i18n
 
 const conferenceTracks = [
-  { title: 'Intelligence Artificielle et Machine Learning' },
-  { title: 'Big Data et Analytics' },
-  { title: 'Cybersécurité et Résilience des Réseaux' },
-  { title: 'Internet des Objets (IoT) et Systèmes Embarqués' },
-  { title: 'Cloud Computing et Infrastructures Numériques' },
-  { title: 'Blockchain et Technologies Fintech' },
-  { title: 'Transformation digitale et gouvernance numérique' },
-  { title: 'Technologies éducatives et pédagogie numérique' },
-  { title: 'Télémédecine et Santé numérique' },
-  { title: 'Agriculture numérique et Smart Farming' },
-  { title: 'Villes intelligentes et Mobilité' },
-  { title: 'Environnement et Technologies vertes' },
+  { title: 'Intelligence Artificielle et ODD' },
+  { title: 'Réseaux, Télécommunications et Infrastructures durables' },
+  { title: 'Cybersécurité et Résilience numérique' },
+  { title: 'Transformation digitale et Innovation responsable' },
+  { title: 'Mathématiques appliquées et Recherche opérationnelle pour le développement durable' },
+  { title: 'Éducation numérique et Inclusion' },
+  { title: 'Technologies émergentes et Durabilité' },
+  { title: 'Coopération scientifique et Innovation pour les ODD' },
+  { title: 'Mathématiques, Modélisation et Analyse numérique pour les systèmes durables' },
+  { title: 'Statistique, Science des données et Économie appliquée' },
+  { title: 'Culture, Patrimoine et Société numérique' },
+  { title: 'TIC, Biologie et Sciences du vivant' },
+  { title: 'Prix Jeune Chercheur' },
   { title: 'Autre' }
 ];
 

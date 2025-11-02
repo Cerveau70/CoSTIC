@@ -21,7 +21,7 @@ const comiteScientifique: ComiteMember[] = [
   },
   // Vice-Président
   {
-    nom: "Prof. Asséu Olivier",
+    nom: "Prof. Asseu Olivier",
     affiliation: "MESRS / ESATIC",
     pays: "Côte d'Ivoire",
     drapeau: "🇨🇮",
