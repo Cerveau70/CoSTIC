@@ -37,14 +37,14 @@ const comiteScientifique: ComiteMember[] = [
     photo: "/img/oumtanaga.jpg",
     titre: "Professeur"
   },
-  {
-    nom: "Prof. Hili Ouagnina",
-    affiliation: "INP-HB",
-    pays: "Côte d'Ivoire",
-    drapeau: "🇨🇮",
-    photo: "/img/Prof. Hili Ouagnina.jpeg",
-    titre: "Professeur"
-  },
+  // {
+  //   nom: "Prof. Hili Ouagnina",
+  //   affiliation: "INP-HB",
+  //   pays: "Côte d'Ivoire",
+  //   drapeau: "🇨🇮",
+  //   photo: "/img/Prof. Hili Ouagnina.jpeg",
+  //   titre: "Professeur"
+  // },
   {
     nom: "Dr(MC) Soro Étienne",
     affiliation: "ESATIC",

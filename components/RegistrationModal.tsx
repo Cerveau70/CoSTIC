@@ -23,15 +23,15 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
 
   // Configuration Paystack
   const prices = {
-    chercheur: { amount: 15000, currency: 'XOF', equivalent: '~98 000 XOF' },
-    etudiant: { amount: 7500, currency: 'XOF', equivalent: '~49 000 XOF' },
+    chercheur: { amount: 50000, currency: 'XOF' },
+    etudiant: { amount: 35000, currency: 'XOF' },
   };
 
   // Configuration pour Paystack
   const config = {
     reference: `costic_${Date.now()}_${registration.email}`,
     email: registration.email,
-    amount: registration.participantType ? prices[registration.participantType as keyof typeof prices].amount : 15000,
+    amount: registration.participantType ? prices[registration.participantType as keyof typeof prices].amount : 50000,
     currency: 'XOF',
     publicKey: 'pk_test_5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f',
     metadata: {
@@ -157,8 +157,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
                 <div className="flex justify-between items-center text-2xl pt-2">
                   <span className="text-neutral-600 font-sans">Total :</span>
                   <div className="text-right">
-                    <span className="font-extrabold text-primary font-sans">{registration.participantType === 'etudiant' ? '75€' : '150€'}</span>
-                    <p className="text-sm text-neutral-500 font-normal">{registration.participantType === 'etudiant' ? '(~49 000 XOF)' : '(~98 000 XOF)'}</p>
+                    <span className="font-extrabold text-primary font-sans">{registration.participantType === 'etudiant' ? '35 000 FCFA' : '50 000 FCFA'}</span>
                   </div>
                 </div>
               </div>
