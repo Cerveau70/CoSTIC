@@ -96,6 +96,7 @@ const fr = {
     committee_paragraph: "Notre comité scientifique est composé d'experts reconnus dans le domaine des TIC.",
     committee_thematic_title: "Répartition Thématique du Comité",
     thematic_math: "Mathématiques & Recherche Opérationnelle",
+    thematic_math_responsibles: "Dr(MC) Moustapha Diaby",
     thematic_ai: "Intelligence Artificielle & Data Science",
     thematic_ai_responsibles: "Dr(MC) Mamadou Diarra, Prof. Leila Nasraoui",
     thematic_networks: "Réseaux & Télécommunications",

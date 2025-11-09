@@ -21,10 +21,10 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
     setRegistration(prev => ({ ...prev, [id]: value }));
   };
 
-  // Configuration des prix (TEST: 100 FCFA pour les tests)
+  // Configuration des prix
   const prices = {
-    chercheur: { amount: 100, currency: 'XOF' },
-    etudiant: { amount: 100, currency: 'XOF' },
+    chercheur: { amount: 50000, currency: 'XOF' },
+    etudiant: { amount: 35000, currency: 'XOF' },
   };
 
   const handleRegistrationSubmit = async (e: React.FormEvent) => {
@@ -135,7 +135,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
                 <div className="flex justify-between items-center text-2xl pt-2">
                   <span className="text-neutral-600 font-sans">Total :</span>
                   <div className="text-right">
-                    <span className="font-extrabold text-primary font-sans">100 FCFA (TEST)</span>
+                    <span className="font-extrabold text-primary font-sans">{registration.participantType === 'etudiant' ? '35 000 FCFA' : '50 000 FCFA'}</span>
                   </div>
                 </div>
               </div>

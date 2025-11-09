@@ -1,179 +1,118 @@
-export interface Partenaire {
+// Configuration des partenaires par défaut du colloque CoSTIC 2026
+
+export interface PartenaireDefaut {
   name: string;
   logo: string;
   siteWeb?: string;
   pays: string;
-  bgColor?: string;
-  hoverColor?: string;
+  type?: string;
 }
 
-export const partenairesDefaut: Partenaire[] = [
+export const partenairesDefaut: PartenaireDefaut[] = [
   {
-    name: 'ESATIC',
-    logo: '/img/esatic.png',
-    siteWeb: 'https://esatic.ci',
-    pays: 'Côte d\'Ivoire',
-    bgColor: 'bg-partner-primary',
-    hoverColor: 'hover:bg-partner-primary-hover'
+    name: "MTND",
+    logo: "/img/ministere-transition-numerique.png",
+    siteWeb: "https://www.transition-numerique.gouv.ci",
+    pays: "Côte d'Ivoire",
+    type: "Institutionnel"
   },
   {
-    name: 'INPHB',
-    logo: '/img/in.png',
-    siteWeb: 'https://inphb.ci',
-    pays: 'Côte d\'Ivoire',
-    bgColor: 'bg-partner-blue',
-    hoverColor: 'hover:bg-partner-blue-hover'
+    name: "MESR",
+    logo: "/img/mesr.jpg",
+    siteWeb: "https://www.enseignement.gouv.ci",
+    pays: "Côte d'Ivoire",
+    type: "Institutionnel"
   },
   {
-    name: 'UFHB',
-    logo: '/img/ufhb.jpg',
-    siteWeb: 'https://ufhb.ci',
-    pays: 'Côte d\'Ivoire',
-    bgColor: 'bg-partner-green',
-    hoverColor: 'hover:bg-partner-green-hover'
+    name: "SNDI",
+    logo: "/img/sndi.png",
+    siteWeb: "https://www.sndi.ci",
+    pays: "Côte d'Ivoire",
+    type: "Développement"
   },
   {
-    name: 'UVCI',
-    logo: '/img/uvci.png',
-    siteWeb: 'https://uvci.ci',
-    pays: 'Côte d\'Ivoire',
-    bgColor: 'bg-partner-purple',
-    hoverColor: 'hover:bg-partner-purple-hover'
+    name: "ARTCI",
+    logo: "/img/artci.png",
+    siteWeb: "https://www.artci.ci",
+    pays: "Côte d'Ivoire",
+    type: "Régulation"
   },
   {
-    name: 'UAO',
-    logo: '/img/uao.jpg',
-    siteWeb: 'https://uao.edu.ci',
-    pays: 'Côte d\'Ivoire',
-    bgColor: 'bg-partner-teal',
-    hoverColor: 'hover:bg-partner-teal-hover'
+    name: "ANSUT",
+    logo: "/img/ansut.png",
+    siteWeb: "https://ansut.ci",
+    pays: "Côte d'Ivoire",
+    type: "Institutionnel"
   },
   {
-    name: 'UPGC',
-    logo: '/img/upgc.png',
-    siteWeb: 'https://upgc.edu.ci',
-    pays: 'Côte d\'Ivoire',
-    bgColor: 'bg-partner-emerald',
-    hoverColor: 'hover:bg-partner-emerald-hover'
+    name: "AIGF",
+    logo: "/img/aigf.png",
+    siteWeb: "https://www.aigf.ci",
+    pays: "Côte d'Ivoire",
+    type: "Institutionnel"
   },
   {
-    name: 'USP',
-    logo: '/img/usp.jpg',
-    siteWeb: 'https://usp.ci',
-    pays: 'Côte d\'Ivoire',
-    bgColor: 'bg-partner-orange',
-    hoverColor: 'hover:bg-partner-orange-hover'
+    name: "VITIB",
+    logo: "/img/vitib.jpg",
+    siteWeb: "https://www.vitib.ci",
+    pays: "Côte d'Ivoire",
+    type: "Technologie"
   },
   {
-    name: 'UNA',
-    logo: '/img/una.png',
-    siteWeb: 'https://una.ci',
-    pays: 'Côte d\'Ivoire',
-    bgColor: 'bg-partner-indigo',
-    hoverColor: 'hover:bg-partner-indigo-hover'
+    name: "Fondation Jeunesse Numérique",
+    logo: "/img/fondation-jeunesse-numerique.png",
+    siteWeb: "https://www.fondation-jeunesse-numerique.ci",
+    pays: "Côte d'Ivoire",
+    type: "Développement"
   },
   {
-    name: 'IRMA',
-    logo: '/img/irma.jpg',
-    siteWeb: 'https://irma.ci',
-    pays: 'Côte d\'Ivoire',
-    bgColor: 'bg-partner-emerald',
-    hoverColor: 'hover:bg-partner-emerald-hover'
+    name: "AUF",
+    logo: "/img/AUF - Agence Universitaire de la Francophonie.png",
+    siteWeb: "https://www.auf.org",
+    pays: "International",
+    type: "International"
   },
   {
-    name: 'CRO',
-    logo: '/img/cro.png',
-    siteWeb: 'https://cro.ci',
-    pays: 'Côte d\'Ivoire',
-    bgColor: 'bg-partner-teal',
-    hoverColor: 'hover:bg-partner-teal-hover'
+    name: "ONUDI",
+    logo: "/img/onudi.png",
+    siteWeb: "https://www.unido.org",
+    pays: "International",
+    type: "International"
   },
   {
-    name: 'IPCI',
-    logo: '/img/institut paseur.jpg',
-    siteWeb: 'https://pasteur.ci',
-    pays: 'Côte d\'Ivoire',
-    bgColor: 'bg-partner-rose',
-    hoverColor: 'hover:bg-partner-rose-hover'
+    name: "Smart Africa",
+    logo: "/img/smart.png",
+    siteWeb: "https://smartafrica.org",
+    pays: "International",
+    type: "International"
   },
   {
-    name: 'UFR MATHS',
-    logo: '/img/maths.jpg',
-    siteWeb: 'https://ufr-math-info.ci',
-    pays: 'Côte d\'Ivoire',
-    bgColor: 'bg-partner-violet',
-    hoverColor: 'hover:bg-partner-violet-hover'
+    name: "UNITEL",
+    logo: "/img/unitel.png",
+    siteWeb: "https://www.unitel.ci",
+    pays: "Côte d'Ivoire",
+    type: "Télécoms"
   },
   {
-    name: 'SMCI',
-    logo: '/img/SMCI_logo_new.png',
-    siteWeb: 'https://example.com/smci',
-    pays: 'Côte d\'Ivoire',
-    bgColor: 'bg-partner-indigo',
-    hoverColor: 'hover:bg-partner-indigo-hover'
+    name: "Huawei",
+    logo: "/img/huawei.png",
+    siteWeb: "https://www.huawei.com",
+    pays: "International",
+    type: "Technologie"
   },
   {
-    name: 'UJKZ',
-    logo: '/img/uJKZ.jpg',
-    siteWeb: 'https://www.univ-ouaga.bf',
-    pays: 'Burkina Faso',
-    bgColor: 'bg-partner-blue',
-    hoverColor: 'hover:bg-partner-blue-hover'
+    name: "Sah Analytics",
+    logo: "/img/sah.jpg",
+    siteWeb: "https://sahanalytics.com/",
+    pays: "Côte d'Ivoire",
+    type: "Technologie"
   },
   {
-    name: 'UGB',
-    logo: '/img/UGBS.jpg',
-    siteWeb: 'https://www.ugb.sn',
-    pays: 'Sénégal',
-    bgColor: 'bg-partner-green',
-    hoverColor: 'hover:bg-partner-green-hover'
-  },
-  {
-    name: 'Université de Conakry',
-    logo: '/img/UDC.jpg',
-    siteWeb: 'https://www.univ-conakry.org',
-    pays: 'Guinée',
-    bgColor: 'bg-partner-red',
-    hoverColor: 'hover:bg-partner-red-hover'
-  },
-  {
-    name: 'Université Nazi Boni',
-    logo: '/img/UNB.png',
-    siteWeb: 'https://www.unb.bf',
-    pays: 'Burkina Faso',
-    bgColor: 'bg-partner-purple',
-    hoverColor: 'hover:bg-partner-purple-hover'
-  },
-  {
-    name: 'Université 2iE',
-    logo: '/img/2iE.png',
-    siteWeb: 'https://www.2ie-edu.org',
-    pays: 'Burkina Faso',
-    bgColor: 'bg-partner-orange',
-    hoverColor: 'hover:bg-partner-orange-hover'
-  },
-  {
-    name: 'Université de Lomé',
-    logo: '/img/UDL.png',
-    siteWeb: 'https://www.univ-lome.tg',
-    pays: 'Togo',
-    bgColor: 'bg-partner-indigo',
-    hoverColor: 'hover:bg-partner-indigo-hover'
-  },
-  {
-    name: 'UCAD',
-    logo: '/img/UCAD.png',
-    siteWeb: 'https://www.ucad.sn',
-    pays: 'Sénégal',
-    bgColor: 'bg-partner-emerald',
-    hoverColor: 'hover:bg-partner-emerald-hover'
-  },
-  {
-    name: 'Tubman University',
-    logo: '/img/tu.jpg',
-    siteWeb: 'https://www.tubmanu.edu.lr/',
-    pays: 'Libéria',
-    bgColor: 'bg-partner-emerald',
-    hoverColor: 'hover:bg-partner-emerald-hover'
+    name: "UIT",
+    logo: "/img/itu.png",
+    siteWeb: "https://www.itu.int",
+    pays: "International",
+    type: "Technologie"
   }
 ];
+
