@@ -1,14 +1,11 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './i18n';
 import App from './App';
 import AdminApp from './AdminApp';
-
-// Vérifier si nous sommes sur la page admin
-const isAdminPage = window.location.pathname === '/admin';
-
-const AppComponent = isAdminPage ? AdminApp : App;
+import PaymentCallback from './pages/PaymentCallback';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -18,6 +15,12 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <AppComponent />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/admin" element={<AdminApp />} />
+        <Route path="/payment-callback" element={<PaymentCallback />} />
+        <Route path="/*" element={<App />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );

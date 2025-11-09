@@ -17,7 +17,7 @@ import { TimelineEvent } from './types';
 import { db, storage } from './firebase';
 import { collection, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { usePaystackPayment } from 'react-paystack';
+import { initiatePayment } from './services/geniuspay';
 import './styles/global.css';
 
 
@@ -273,58 +273,10 @@ const App: React.FC = () => {
     }
   };
 
-  // Configuration Paystack
+  // Configuration des prix (TEST: 100 FCFA pour les tests)
   const prices = {
-    chercheur: { amount: 50000, currency: 'XOF' },
-    etudiant: { amount: 35000, currency: 'XOF' },
-  };
-
-  // Configuration pour Paystack
-  const config = {
-    reference: `costic_${Date.now()}_${registration.email}`,
-    email: registration.email,
-    amount: registration.participantType ? prices[registration.participantType as keyof typeof prices].amount : 50000,
-    currency: 'XOF', // Franc CFA pour l'Afrique de l'Ouest
-    publicKey: 'pk_test_5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f',
-    metadata: {
-      name: registration.name,
-      participantType: registration.participantType,
-      registrationDocId: registrationDocId
-    }
-  };
-
-  // Hook Paystack
-  const initializePayment = usePaystackPayment(config);
-
-  const onSuccess = async (reference: any) => {
-    console.log('Paiement réussi:', reference);
-
-    try {
-      // Mettre à jour le statut de paiement dans Firestore
-      if (registrationDocId) {
-        await updateDoc(doc(db, "registrations", registrationDocId), {
-          paymentStatus: 'completed',
-          paymentReference: reference.reference,
-          paymentDate: serverTimestamp()
-        });
-      }
-
-      setRegistrationStatus('Succès : Votre paiement a été effectué avec succès ! Vous recevrez un email de confirmation.');
-      setRegistration(initialRegistrationState);
-      setRegistrationDocId(null);
-
-      // Optionnel : Rediriger vers une page de confirmation
-      // window.location.href = '/confirmation';
-
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour du statut de paiement:", error);
-      setRegistrationStatus('Paiement réussi mais erreur lors de la mise à jour. Contactez-nous avec la référence: ' + reference.reference);
-    }
-  };
-
-  const onClose = () => {
-    console.log('Paiement annulé');
-    setRegistrationStatus('Paiement annulé. Vous pouvez réessayer quand vous le souhaitez.');
+    chercheur: { amount: 100, currency: 'XOF' },
+    etudiant: { amount: 100, currency: 'XOF' },
   };
 
   const handleRegistrationSubmit = async (e: React.FormEvent) => {
@@ -337,7 +289,7 @@ const App: React.FC = () => {
     setIsRegistering(true);
 
     try {
-      // 1. Save registration intent to Firestore
+      // 1. Sauvegarder l'inscription dans Firestore
       const docRef = await addDoc(collection(db, "registrations"), {
         ...registration,
         paymentStatus: 'pending',
@@ -348,13 +300,34 @@ const App: React.FC = () => {
 
       setRegistrationDocId(docRef.id);
 
-      // 2. Initialize Paystack payment
-      initializePayment(onSuccess, onClose);
+      // 2. Initier le paiement GeniusPay
+      const paymentReference = `costic_${Date.now()}_${registration.email}`;
+      const paymentData = {
+        amount: prices[registration.participantType as keyof typeof prices].amount,
+        currency: 'XOF',
+        customer_email: registration.email,
+        customer_name: registration.name,
+        reference: paymentReference,
+        callback_url: `${window.location.origin}/payment-callback?registration_doc_id=${docRef.id}`,
+        metadata: {
+          name: registration.name,
+          participantType: registration.participantType,
+          registrationDocId: docRef.id
+        }
+      };
 
-    } catch (error) {
+      const paymentResponse = await initiatePayment(paymentData);
+
+      if (paymentResponse.success && paymentResponse.data?.payment_url) {
+        // Rediriger vers la page de paiement GeniusPay
+        window.location.href = paymentResponse.data.payment_url;
+      } else {
+        throw new Error(paymentResponse.message || paymentResponse.error || 'Erreur lors de l\'initiation du paiement');
+      }
+
+    } catch (error: any) {
       console.error("Error saving registration: ", error);
-      setRegistrationStatus("Erreur : Impossible d'enregistrer l'inscription. Veuillez réessayer.");
-    } finally {
+      setRegistrationStatus(error.message || "Erreur : Impossible d'enregistrer l'inscription. Veuillez réessayer.");
       setIsRegistering(false);
     }
   };
@@ -889,7 +862,7 @@ const App: React.FC = () => {
                       <div className="flex justify-between items-center text-3xl pt-4">
                         <span className="text-neutral-600 font-sans">{t('summary_total')}</span>
                         <div className="text-right">
-                          <span className="font-extrabold text-primary font-sans">{registration.participantType === 'etudiant' ? '35 000 FCFA' : '50 000 FCFA'}</span>
+                          <span className="font-extrabold text-primary font-sans">100 FCFA (TEST)</span>
                         </div>
                       </div>
                     </div>
