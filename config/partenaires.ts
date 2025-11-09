@@ -59,7 +59,7 @@ export const partenairesDefaut: PartenaireDefaut[] = [
     type: "Technologie"
   },
   {
-    name: "Fondation Jeunesse Numérique",
+    name: "FJN",
     logo: "/img/fondation-jeunesse-numerique.png",
     siteWeb: "https://www.fondation-jeunesse-numerique.ci",
     pays: "Côte d'Ivoire",
