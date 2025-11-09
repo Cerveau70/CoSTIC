@@ -59,8 +59,8 @@ const partenaires: Partenaire[] = [
     site: "https://www.vitib.ci"
   },
   {
-    nom: "Fondation Jeunesse Numérique",
-    description: "Fondation Jeunesse Numérique",
+    nom: "FJN",
+    description: "FJN",
     logo: "/img/fondation-jeunesse-numerique.png",
     type: "Développement",
     site: "https://www.fondation-jeunesse-numerique.ci"
