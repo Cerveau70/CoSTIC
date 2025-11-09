@@ -216,15 +216,72 @@ const App: React.FC = () => {
   const [registrationStatus, setRegistrationStatus] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
   const [registrationDocId, setRegistrationDocId] = useState<string | null>(null);
+  const [registrationFieldErrors, setRegistrationFieldErrors] = useState({ name: '', email: '' });
+  const [registrationTouched, setRegistrationTouched] = useState({ name: false, email: false });
+
+  // Validation de l'email
+  const validateEmail = (email: string): string => {
+    if (!email.trim()) {
+      return 'L\'adresse e-mail est requise';
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return 'Veuillez entrer une adresse e-mail valide (ex: nom@exemple.com)';
+    }
+    return '';
+  };
+
+  // Validation du nom complet
+  const validateName = (name: string): string => {
+    if (!name.trim()) {
+      return 'Le nom complet est requis';
+    }
+    if (name.trim().length < 2) {
+      return 'Le nom complet doit contenir au moins 2 caractères';
+    }
+    if (name.trim().length > 100) {
+      return 'Le nom complet ne peut pas dépasser 100 caractères';
+    }
+    return '';
+  };
 
   const handleSubmissionChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
     setSubmission(prev => ({ ...prev, [id]: value }));
   };
 
+  // Validation en temps réel
   const handleRegistrationChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
     setRegistration(prev => ({ ...prev, [id]: value }));
+
+    // Valider le champ modifié
+    if (id === 'email') {
+      const error = validateEmail(value);
+      setRegistrationFieldErrors(prev => ({ ...prev, email: error }));
+    } else if (id === 'name') {
+      const error = validateName(value);
+      setRegistrationFieldErrors(prev => ({ ...prev, name: error }));
+    }
+  };
+
+  // Gérer le blur (quand l'utilisateur quitte le champ)
+  const handleRegistrationBlur = (field: 'name' | 'email') => {
+    setRegistrationTouched(prev => ({ ...prev, [field]: true }));
+    if (field === 'email') {
+      const error = validateEmail(registration.email);
+      setRegistrationFieldErrors(prev => ({ ...prev, email: error }));
+    } else if (field === 'name') {
+      const error = validateName(registration.name);
+      setRegistrationFieldErrors(prev => ({ ...prev, name: error }));
+    }
+  };
+
+  // Vérifier si le formulaire est valide
+  const isRegistrationFormValid = (): boolean => {
+    const nameError = validateName(registration.name);
+    const emailError = validateEmail(registration.email);
+    return !nameError && !emailError;
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -281,10 +338,25 @@ const App: React.FC = () => {
 
   const handleRegistrationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!registration.name || !registration.email) {
-      setRegistrationStatus('Erreur : Veuillez renseigner votre nom et votre e-mail.');
+
+    // Marquer tous les champs comme touchés
+    setRegistrationTouched({ name: true, email: true });
+
+    // Valider tous les champs
+    const nameError = validateName(registration.name);
+    const emailError = validateEmail(registration.email);
+
+    setRegistrationFieldErrors({
+      name: nameError,
+      email: emailError
+    });
+
+    // Si erreurs, ne pas soumettre
+    if (nameError || emailError) {
+      setRegistrationStatus('Erreur : Veuillez corriger les erreurs dans le formulaire.');
       return;
     }
+
     setRegistrationStatus('');
     setIsRegistering(true);
 
@@ -319,21 +391,48 @@ const App: React.FC = () => {
       const paymentResponse = await initiatePayment(paymentData);
 
       if (paymentResponse.success && paymentResponse.data?.payment_url) {
+        // Message de succès avant redirection
+        setRegistrationStatus('Succès : Redirection vers la page de paiement...');
         // Rediriger vers la page de paiement GeniusPay
-        window.location.href = paymentResponse.data.payment_url;
+        setTimeout(() => {
+          window.location.href = paymentResponse.data.payment_url;
+        }, 500);
       } else {
         throw new Error(paymentResponse.message || paymentResponse.error || 'Erreur lors de l\'initiation du paiement');
       }
 
     } catch (error: any) {
       console.error("Error saving registration: ", error);
-      setRegistrationStatus(error.message || "Erreur : Impossible d'enregistrer l'inscription. Veuillez réessayer.");
+      // Améliorer les messages d'erreur
+      let errorMessage = "Erreur : Impossible d'enregistrer l'inscription. Veuillez réessayer.";
+
+      if (error.message) {
+        if (error.message.includes('email') || error.message.includes('Email') || error.message.includes('e-mail')) {
+          errorMessage = 'Erreur : L\'adresse e-mail est incorrecte. Veuillez vérifier votre e-mail.';
+        } else if (error.message.includes('name') || error.message.includes('nom')) {
+          errorMessage = 'Erreur : Le nom complet est incorrect. Veuillez vérifier votre nom.';
+        } else if (error.message.includes('Validation')) {
+          errorMessage = 'Erreur : Les informations fournies ne sont pas valides. Veuillez vérifier votre e-mail et votre nom complet.';
+        } else {
+          errorMessage = `Erreur : ${error.message}`;
+        }
+      }
+
+      setRegistrationStatus(errorMessage);
       setIsRegistering(false);
     }
   };
 
-  const inputStyle = "w-full px-4 py-3 bg-white border border-neutral-300 rounded-lg shadow-sm transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent font-body";
+  const baseInputStyle = "w-full px-4 py-3 bg-white border border-neutral-300 rounded-lg shadow-sm transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent font-body";
+
+  const inputStyle = (hasError: boolean) =>
+    `w-full px-4 py-3 bg-white border rounded-lg shadow-sm transition duration-300 ease-in-out focus:outline-none focus:ring-2 font-body ${hasError
+      ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+      : 'border-neutral-300 focus:ring-secondary focus:border-transparent'
+    }`;
+
   const labelStyle = "block text-neutral-700 font-semibold mb-2 font-sans";
+  const errorTextStyle = "text-red-600 text-sm mt-1 font-body";
 
   // Défilement des universités: mesure dynamique de la piste
   const universitiesContainerRef = useRef<HTMLDivElement | null>(null);
@@ -780,23 +879,23 @@ const App: React.FC = () => {
                     <div className="space-y-5">
                       <div>
                         <label htmlFor="authorName" className={labelStyle}>{t('label_author_name')}</label>
-                        <input type="text" id="authorName" value={submission.authorName} onChange={handleSubmissionChange} className={inputStyle} required disabled={isSubmitting} />
+                        <input type="text" id="authorName" value={submission.authorName} onChange={handleSubmissionChange} className={baseInputStyle} required disabled={isSubmitting} />
                       </div>
                       <div>
                         <label htmlFor="authorEmail" className={labelStyle}>{t('label_author_email')}</label>
-                        <input type="email" id="authorEmail" value={submission.authorEmail} onChange={handleSubmissionChange} className={inputStyle} required disabled={isSubmitting} />
+                        <input type="email" id="authorEmail" value={submission.authorEmail} onChange={handleSubmissionChange} className={baseInputStyle} required disabled={isSubmitting} />
                       </div>
                       <div>
                         <label htmlFor="affiliation" className={labelStyle}>{t('label_affiliation')}</label>
-                        <input type="text" id="affiliation" value={submission.affiliation} onChange={handleSubmissionChange} className={inputStyle} disabled={isSubmitting} />
+                        <input type="text" id="affiliation" value={submission.affiliation} onChange={handleSubmissionChange} className={baseInputStyle} disabled={isSubmitting} />
                       </div>
                       <div>
                         <label htmlFor="articleTitle" className={labelStyle}>{t('label_article_title')}</label>
-                        <input type="text" id="articleTitle" value={submission.articleTitle} onChange={handleSubmissionChange} className={inputStyle} required disabled={isSubmitting} />
+                        <input type="text" id="articleTitle" value={submission.articleTitle} onChange={handleSubmissionChange} className={baseInputStyle} required disabled={isSubmitting} />
                       </div>
                       <div>
                         <label htmlFor="themeSelect" className={labelStyle}>{t('label_theme_select')}</label>
-                        <select id="themeSelect" value={submission.themeSelect} onChange={handleSubmissionChange} className={inputStyle} disabled={isSubmitting}>
+                        <select id="themeSelect" value={submission.themeSelect} onChange={handleSubmissionChange} className={baseInputStyle} disabled={isSubmitting}>
                           <option value="">{t('theme_placeholder')}</option>
                           {conferenceTracks.map(track => <option key={track.title} value={track.title}>{track.title}</option>)}
                         </select>
@@ -833,19 +932,76 @@ const App: React.FC = () => {
                 <p className="text-center text-lg text-neutral-600 mb-10 max-w-2xl mx-auto">
                   {t('registration_intro')}
                 </p>
+
+                {/* Panneau d'erreur global */}
+                {registrationStatus && (
+                  <div className={`mb-6 p-4 rounded-lg ${registrationStatus.startsWith('Erreur')
+                      ? 'bg-red-50 border border-red-200'
+                      : 'bg-green-50 border border-green-200'
+                    }`}>
+                    <div className="flex items-start">
+                      {registrationStatus.startsWith('Erreur') ? (
+                        <svg className="w-5 h-5 text-red-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      )}
+                      <p className={`text-sm font-medium ${registrationStatus.startsWith('Erreur') ? 'text-red-800' : 'text-green-800'
+                        }`}>
+                        {registrationStatus}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
                 <div className="grid lg:grid-cols-2 gap-12 items-center">
                   <form onSubmit={handleRegistrationSubmit} className="space-y-6">
                     <div>
                       <label htmlFor="name" className={labelStyle}>{t('label_name')}</label>
-                      <input type="text" id="name" value={registration.name} onChange={handleRegistrationChange} className={inputStyle} required disabled={isRegistering} />
+                      <input
+                        type="text"
+                        id="name"
+                        value={registration.name}
+                        onChange={handleRegistrationChange}
+                        onBlur={() => handleRegistrationBlur('name')}
+                        className={inputStyle(registrationTouched.name && !!registrationFieldErrors.name)}
+                        required
+                        disabled={isRegistering}
+                        placeholder="Ex: Jean Luc"
+                      />
+                      {registrationTouched.name && registrationFieldErrors.name && (
+                        <p className={errorTextStyle}>{registrationFieldErrors.name}</p>
+                      )}
                     </div>
                     <div>
                       <label htmlFor="email" className={labelStyle}>{t('label_email')}</label>
-                      <input type="email" id="email" value={registration.email} onChange={handleRegistrationChange} className={inputStyle} required disabled={isRegistering} />
+                      <input
+                        type="email"
+                        id="email"
+                        value={registration.email}
+                        onChange={handleRegistrationChange}
+                        onBlur={() => handleRegistrationBlur('email')}
+                        className={inputStyle(registrationTouched.email && !!registrationFieldErrors.email)}
+                        required
+                        disabled={isRegistering}
+                        placeholder="Ex: jean.luc@exemple.com"
+                      />
+                      {registrationTouched.email && registrationFieldErrors.email && (
+                        <p className={errorTextStyle}>{registrationFieldErrors.email}</p>
+                      )}
                     </div>
                     <div>
                       <label htmlFor="participantType" className={labelStyle}>{t('label_participant_type')}</label>
-                      <select id="participantType" value={registration.participantType} onChange={handleRegistrationChange} className={inputStyle} disabled={isRegistering}>
+                      <select
+                        id="participantType"
+                        value={registration.participantType}
+                        onChange={handleRegistrationChange}
+                        className={inputStyle(false)}
+                        disabled={isRegistering}
+                      >
                         <option value="chercheur">{t('option_researcher')}</option>
                         <option value="etudiant">{t('option_student')}</option>
                       </select>
@@ -867,7 +1023,11 @@ const App: React.FC = () => {
                       </div>
                     </div>
                     <div className="mt-8">
-                      <button onClick={handleRegistrationSubmit} disabled={isRegistering} className="w-full bg-accent text-white font-bold py-4 px-10 rounded-lg hover:bg-accent/90 transition-all duration-300 text-lg inline-flex items-center justify-center shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-sans disabled:bg-neutral-400 disabled:cursor-not-allowed">
+                      <button
+                        onClick={handleRegistrationSubmit}
+                        disabled={isRegistering || !isRegistrationFormValid()}
+                        className="w-full bg-accent text-white font-bold py-4 px-10 rounded-lg hover:bg-accent/90 transition-all duration-300 text-lg inline-flex items-center justify-center shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-sans disabled:bg-neutral-400 disabled:cursor-not-allowed disabled:hover:transform-none disabled:hover:shadow-md"
+                      >
                         {isRegistering ? (
                           <>
                             <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
@@ -880,7 +1040,6 @@ const App: React.FC = () => {
                           </>
                         )}
                       </button>
-                      {registrationStatus && <p className={`mt-4 text-center text-sm ${registrationStatus.startsWith('Erreur') || registrationStatus.startsWith('Error') ? 'text-red-600' : 'text-green-600'}`}>{registrationStatus}</p>}
                       <p className="text-xs text-neutral-500 text-center mt-4">{t('payment_note')}</p>
                     </div>
                   </div>
@@ -1026,7 +1185,7 @@ const App: React.FC = () => {
 
         {/* Partenariat Section */}
         <div id="partenariat">
-          <Section className="bg-white">
+          <Section title="" className="bg-white">
             <PartenaireForm />
           </Section>
         </div>

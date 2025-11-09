@@ -37,7 +37,7 @@ const PaymentCallback: React.FC = () => {
 
             setStatus('success');
             setMessage('Paiement effectué avec succès ! Vous recevrez un email de confirmation.');
-            
+
             // Rediriger après 5 secondes
             setTimeout(() => {
               window.location.href = '/#inscription';
