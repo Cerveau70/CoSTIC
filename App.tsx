@@ -61,7 +61,7 @@ const Animated: React.FC<{ animationClass: string, delay?: number, children: Rea
     <div
       ref={ref as React.RefObject<HTMLDivElement>}
       className={`${isVisible ? animationClass : 'opacity-0'}`}
-      style={{ transition: `opacity 0.7s ease-out ${delay}ms, transform 0.7s ease-out ${delay}ms` }}
+      style={{ transition: `opacity 0.3s ease-out ${delay}ms, transform 0.3s ease-out ${delay}ms` }}
     >
       {children}
     </div>
@@ -211,6 +211,7 @@ const App: React.FC = () => {
 
   const initialRegistrationState = {
     name: '', email: '', participantType: 'chercheur',
+    paymentMethod: 'wave', // Ajouter paymentMethod
   };
   const [registration, setRegistration] = useState(initialRegistrationState);
   const [registrationStatus, setRegistrationStatus] = useState('');
@@ -365,6 +366,7 @@ const App: React.FC = () => {
       const docRef = await addDoc(collection(db, "registrations"), {
         ...registration,
         paymentStatus: 'pending',
+        paymentMethod: registration.paymentMethod,
         registeredAt: serverTimestamp(),
         amount: prices[registration.participantType as keyof typeof prices].amount,
         currency: 'XOF'
@@ -372,33 +374,42 @@ const App: React.FC = () => {
 
       setRegistrationDocId(docRef.id);
 
-      // 2. Initier le paiement GeniusPay
-      const paymentReference = `costic_${Date.now()}_${registration.email}`;
-      const paymentData = {
-        amount: prices[registration.participantType as keyof typeof prices].amount,
-        currency: 'XOF',
-        customer_email: registration.email,
-        customer_name: registration.name,
-        reference: paymentReference,
-        callback_url: `${window.location.origin}/payment-callback?registration_doc_id=${docRef.id}`,
-        metadata: {
-          name: registration.name,
-          participantType: registration.participantType,
-          registrationDocId: docRef.id
+      // 2. Gérer selon la méthode de paiement
+      if (registration.paymentMethod === 'wave') {
+        // Initier le paiement GeniusPay (Wave)
+        const paymentReference = `costic_${Date.now()}_${registration.email}`;
+        const paymentData = {
+          amount: prices[registration.participantType as keyof typeof prices].amount,
+          currency: 'XOF',
+          customer_email: registration.email,
+          customer_name: registration.name,
+          reference: paymentReference,
+          callback_url: `${window.location.origin}/payment-callback?registration_doc_id=${docRef.id}&payment_method=wave`,
+          metadata: {
+            name: registration.name,
+            participantType: registration.participantType,
+            registrationDocId: docRef.id
+          }
+        };
+
+        const paymentResponse = await initiatePayment(paymentData);
+
+        if (paymentResponse.success && paymentResponse.data?.payment_url) {
+          // Message de succès avant redirection
+          setRegistrationStatus('Succès : Redirection vers la page de paiement...');
+          // Rediriger vers la page de paiement GeniusPay
+          setTimeout(() => {
+            window.location.href = paymentResponse.data.payment_url;
+          }, 500);
+        } else {
+          throw new Error(paymentResponse.message || paymentResponse.error || 'Erreur lors de l\'initiation du paiement');
         }
-      };
-
-      const paymentResponse = await initiatePayment(paymentData);
-
-      if (paymentResponse.success && paymentResponse.data?.payment_url) {
-        // Message de succès avant redirection
-        setRegistrationStatus('Succès : Redirection vers la page de paiement...');
-        // Rediriger vers la page de paiement GeniusPay
+      } else if (registration.paymentMethod === 'orange') {
+        // Pour Orange Money, rediriger vers la page de callback avec les instructions
+        setRegistrationStatus('Succès : Redirection vers les instructions de paiement...');
         setTimeout(() => {
-          window.location.href = paymentResponse.data.payment_url;
+          window.location.href = `${window.location.origin}/payment-callback?registration_doc_id=${docRef.id}&payment_method=orange`;
         }, 500);
-      } else {
-        throw new Error(paymentResponse.message || paymentResponse.error || 'Erreur lors de l\'initiation du paiement');
       }
 
     } catch (error: any) {
@@ -936,8 +947,8 @@ const App: React.FC = () => {
                 {/* Panneau d'erreur global */}
                 {registrationStatus && (
                   <div className={`mb-6 p-4 rounded-lg ${registrationStatus.startsWith('Erreur')
-                      ? 'bg-red-50 border border-red-200'
-                      : 'bg-green-50 border border-green-200'
+                    ? 'bg-red-50 border border-red-200'
+                    : 'bg-green-50 border border-green-200'
                     }`}>
                     <div className="flex items-start">
                       {registrationStatus.startsWith('Erreur') ? (
@@ -1006,6 +1017,37 @@ const App: React.FC = () => {
                         <option value="etudiant">{t('option_student')}</option>
                       </select>
                     </div>
+                    <div>
+                      <label className={labelStyle}>Méthode de paiement*</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setRegistration(prev => ({ ...prev, paymentMethod: 'wave' }))}
+                          disabled={isRegistering}
+                          className={`p-3 rounded-lg transition-all duration-300 flex flex-col items-center justify-center ${registration.paymentMethod === 'wave'
+                            ? 'bg-white shadow-lg'
+                            : 'bg-transparent hover:bg-white hover:shadow-md'
+                            } ${isRegistering ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                        >
+                          <img src="/img/wave.png" alt="Wave" className="w-24 h-24 mb-2 object-contain" />
+                          <span className="font-semibold text-sm">Wave</span>
+                          <span className="text-xs text-neutral-500 mt-1">Paiement en ligne</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setRegistration(prev => ({ ...prev, paymentMethod: 'orange' }))}
+                          disabled={isRegistering}
+                          className={`p-3 rounded-lg transition-all duration-300 flex flex-col items-center justify-center ${registration.paymentMethod === 'orange'
+                            ? 'bg-white shadow-lg'
+                            : 'bg-transparent hover:bg-white hover:shadow-md'
+                            } ${isRegistering ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                        >
+                          <img src="/img/orange.png" alt="Orange Money" className="w-24 h-24 mb-2 object-contain" />
+                          <span className="font-semibold text-sm">Orange Money</span>
+                          <span className="text-xs text-neutral-500 mt-1">Paiement mobile</span>
+                        </button>
+                      </div>
+                    </div>
                   </form>
 
                   <div className="bg-neutral-100 p-8 rounded-xl border border-neutral-200">
@@ -1018,7 +1060,9 @@ const App: React.FC = () => {
                       <div className="flex justify-between items-center text-3xl pt-4">
                         <span className="text-neutral-600 font-sans">{t('summary_total')}</span>
                         <div className="text-right">
-                          <span className="font-extrabold text-primary font-sans">{registration.participantType === 'etudiant' ? '35 000 FCFA' : '50 000 FCFA'}</span>
+                          <span className="font-extrabold text-primary font-sans">
+                            {registration.participantType === 'etudiant' ? '35 000 FCFA' : '50 000 FCFA'}
+                          </span>
                         </div>
                       </div>
                     </div>

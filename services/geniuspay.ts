@@ -5,7 +5,7 @@ const API_KEY = import.meta.env.VITE_GENIUSPAY_API_KEY || 'gp_Nyoe0Q7oBEnkU2j2Jn
 const API_SECRET = import.meta.env.VITE_GENIUSPAY_SECRET_KEY || 'Gtav3pQa1hYGDGV9Gef3WX0jlvEanvQa';
 
 export interface PaymentInitRequest {
-  amount: number; // Montant en centimes (ex: 1000 = 10 FCFA)
+  amount: number; // Montant en FCFA (ex: 50000 = 50000 FCFA)
   customer_email: string;
   customer_name?: string;
   gateway?: string; // 'wave' pour forcer Wave
@@ -45,15 +45,12 @@ export const initiatePayment = async (paymentData: PaymentInitRequest): Promise<
       ? '/api/geniuspay' 
       : GENIUSPAY_API_URL;
     
-    // Convertir le montant en centimes (multiplier par 100)
-    // Exemple: 1 FCFA = 100 centimes, 50 FCFA = 5000 centimes
-    const amountInCents = Math.round(paymentData.amount * 100);
-    
-    console.log(`💰 Conversion du montant: ${paymentData.amount} FCFA = ${amountInCents} centimes`);
+    // L'API GeniusPay attend le montant directement en FCFA, pas en centimes
+    console.log(`💰 Montant du paiement: ${paymentData.amount} FCFA`);
     
     // Préparer les données selon la documentation GeniusPay
     const requestData = {
-      amount: amountInCents,
+      amount: paymentData.amount,
       customer_email: paymentData.customer_email,
       customer_name: paymentData.customer_name || null,
       gateway: 'wave', // Forcer Wave
