@@ -91,9 +91,11 @@ const Footer: React.FC = () => {
           </div>
           <div className="text-sm">
             <h3 className="text-xl font-bold mb-2 text-white font-sans">{t('footer_contact')}</h3>
-            <p className="text-neutral-300">{t('footer_secretariat')}</p>
-            <a href="mailto:costic2026@esatic.edu.ci" className="text-secondary hover:text-white transition-colors duration-300 block">costic2026@esatic.edu.ci</a>
-            <a href="http://costic2026.esatic.ci" target="_blank" rel="noopener noreferrer" className="text-secondary hover:text-white transition-colors duration-300">http://costic2026.esatic.ci</a>
+            <p className="text-neutral-300 mb-2">{t('footer_secretariat')}</p>
+            <a href="mailto:costic@esatic.edu.ci" className="text-secondary hover:text-white transition-colors duration-300 block mb-2">costic@esatic.edu.ci</a>
+            <a href="tel:+2250707898952" className="text-secondary hover:text-white transition-colors duration-300 block mb-2">0707898952</a>
+            <a href="tel:+2250749137683" className="text-secondary hover:text-white transition-colors duration-300 block mb-2">0749137683</a>
+            <a href="https://costic.esatic.ci" target="_blank" rel="noopener noreferrer" className="text-secondary hover:text-white transition-colors duration-300 block">https://costic.esatic.ci</a>
           </div>
           <div>
             <h3 className="text-xl font-bold mb-2 text-white font-sans">{t('footer_stay_informed')}</h3>
@@ -133,12 +135,12 @@ const Footer: React.FC = () => {
               © 2026 CoSTIC - Colloque Scientifique sur les Technologies de l'Information et de la Communication
             </div>
             <div className="flex items-center space-x-4">
-              <a href="mailto:costic2026@esatic.edu.ci" className="text-neutral-300 hover:text-white transition-colors duration-300">
+              <a href="mailto:costic@esatic.edu.ci" className="text-neutral-300 hover:text-white transition-colors duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </a>
-              <a href="http://costic2026.esatic.ci" target="_blank" rel="noopener noreferrer" className="text-neutral-300 hover:text-white transition-colors duration-300">
+              <a href="https://costic.esatic.ci" target="_blank" rel="noopener noreferrer" className="text-neutral-300 hover:text-white transition-colors duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>

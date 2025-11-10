@@ -11,7 +11,7 @@ const PaymentCallback: React.FC = () => {
   const [message, setMessage] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<string>('wave');
 
-  const RECEIPT_EMAIL = 'moustapha.diaby@esatic.edu.ci';
+  const RECEIPT_EMAIL = 'costic@esatic.edu.ci';
   const ORANGE_MONEY_NUMBER = '0707898952';
 
   useEffect(() => {

@@ -12,7 +12,7 @@ import ResultatsCarousel from './components/ResultatsCarousel';
 import SocialMediaSticky from './components/SocialMediaSticky';
 import PartenaireForm from './components/PartenaireForm';
 import VisitorCounterSticky from './components/VisitorCounterSticky';
-import { partenairesDefaut } from './config/partenaires';
+import { partenairesDefaut, universites } from './config/partenaires';
 import { TimelineEvent } from './types';
 import { db, storage } from './firebase';
 import { collection, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
@@ -497,7 +497,7 @@ const App: React.FC = () => {
           <div className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40" style={{ backgroundImage: "url('/img/arr.png')" }}></div>
           <div className="container mx-auto px-6 relative z-10">
 
-            {/* Partenaires Logos - Défilement simple vers la droite */}
+            {/* Universités Logos - Défilement simple vers la droite */}
             <div className="mb-8 animate-fade-in-up overflow-hidden" style={{ animationDelay: '0.1s' }}>
               <div className="mx-auto w-[1200px] overflow-hidden" ref={universitiesContainerRef}>
                 <div
@@ -512,16 +512,16 @@ const App: React.FC = () => {
                   ref={universitiesTrackRef}
                 >
                   {/* Créer une boucle continue en ajoutant tous les éléments à la fin */}
-                  {[...partenairesDefaut, ...partenairesDefaut].map((partenaire, index) => (
+                  {[...universites, ...universites].map((universite, index) => (
                     <div
-                      key={`${partenaire.name}-${index}`}
+                      key={`${universite.name}-${index}`}
                       className="flex-shrink-0 group"
                     >
                       {/* Logo simple et fixe */}
                       <div className="w-20 h-20 bg-pure-white rounded-lg shadow-lg flex items-center justify-center transition-all duration-300 hover:shadow-xl hover:scale-105 border border-gray-100">
                         <img
-                          src={partenaire.logo}
-                          alt={`Logo ${partenaire.name}`}
+                          src={universite.logo}
+                          alt={`Logo ${universite.name}`}
                           className="max-w-16 max-h-16 object-contain transition-all duration-300 group-hover:scale-110"
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
@@ -531,7 +531,7 @@ const App: React.FC = () => {
                               parent.innerHTML = `
                     <div class="w-full h-full flex items-center justify-center">
                       <div class="text-gray-600 font-bold text-sm text-center leading-tight">
-                        ${partenaire.name.split(' ').map(word => word.charAt(0)).join('')}
+                        ${universite.name.split(' ').map(word => word.charAt(0)).join('')}
                       </div>
                     </div>
                   `;
@@ -543,10 +543,10 @@ const App: React.FC = () => {
                       {/* Nom de l'université - discret */}
                       <div className="mt-2 text-center">
                         <span className="text-xs text-white/90 font-medium leading-tight block max-w-20">
-                          {partenaire.name}
+                          {universite.name}
                         </span>
                         <span className="text-xs text-white/70 block mt-1">
-                          {partenaire.pays}
+                          {universite.pays}
                         </span>
                       </div>
                     </div>

@@ -55,8 +55,8 @@ const comiteScientifique: ComiteMember[] = [
   },
   {
     nom: "Dr(MC) Moustapha Diaby",
-    affiliation: "ESATIC / Université de Lille",
-    pays: "Côte d'Ivoire / France",
+    affiliation: "ESATIC",
+    pays: "Côte d'Ivoire",
     drapeau: "🇨🇮",
     photo: "/img/diaby.jpg",
     titre: "Rapporteur Général"
@@ -78,6 +78,31 @@ const comiteScientifique: ComiteMember[] = [
     photo: "/img/Dr_Diarra_Mamadou.jpg",
     titre: "Docteur"
   },
+  {
+    nom: "Dr(MC) bamba Aliou",
+    affiliation: "AIGF",
+    pays: "Côte d'Ivoire",
+    drapeau: "🇨🇮",
+    photo: "/img/bamba.jpg",
+    titre: "Docteur"
+  },
+  {
+    nom: "Dr (MC) ACHIEPO Odilon YAPO",
+    affiliation: "UVCI",
+    pays: "Côte d'Ivoire",
+    drapeau: "🇨🇮",
+    photo: "/img/ACHEIPO.jpg",
+    titre: "Docteur"
+  },
+  {
+    nom: "Dr Nabongo DIABATE",
+    affiliation: "UAO",
+    pays: "Côte d'Ivoire",
+    drapeau: "🇨🇮",
+    photo: "/img/nabango.jpg",
+    titre: "Docteur"
+  },
+
   {
     nom: "Dr(MC) Sere Aboulaye",
     affiliation: "Université Nazi Boni",
