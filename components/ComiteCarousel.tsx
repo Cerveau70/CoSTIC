@@ -37,14 +37,22 @@ const comiteScientifique: ComiteMember[] = [
     photo: "/img/oumtanaga.jpg",
     titre: "Professeur"
   },
-  // {
-  //   nom: "Prof. Hili Ouagnina",
-  //   affiliation: "INP-HB",
-  //   pays: "Côte d'Ivoire",
-  //   drapeau: "🇨🇮",
-  //   photo: "/img/Prof. Hili Ouagnina.jpeg",
-  //   titre: "Professeur"
-  // },
+  {
+    nom: "Prof. Roger Marcelin FAYE",
+    affiliation: "UCAD",
+    pays: "Sénégal",
+    drapeau: "🇸🇳",
+    photo: "/img/roger.jpg",
+    titre: "Professeur"
+  },
+  {
+    nom: "Prof. Claude Lishou",
+    affiliation: "UCAD",
+    pays: "Sénégal",
+    drapeau: "🇸🇳",
+    photo: "/img/claude.png",
+    titre: "Professeur"
+  },
   {
     nom: "Dr(MC) Soro Étienne",
     affiliation: "ESATIC",
@@ -109,6 +117,14 @@ const comiteScientifique: ComiteMember[] = [
     pays: "Burkina Faso",
     drapeau: "🇧🇫",
     photo: "/img/sere.jpg",
+    titre: "Docteur"
+  },
+  {
+    nom: "Dr(MC) Eyouléki Tcheyi Gnadi",
+    affiliation: "Université de Lomé",
+    pays: "Togo",
+    drapeau: "🇹🇬",
+    photo: "/img/Eyouleki.png",
     titre: "Docteur"
   },
   // Afrique

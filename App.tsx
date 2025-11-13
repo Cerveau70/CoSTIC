@@ -824,14 +824,14 @@ const App: React.FC = () => {
                     <p className="text-neutral-600 text-sm mb-4">{t('models_desc')}</p>
                     <div className="flex flex-wrap gap-3">
                       <a
-                        href="/templates/exemple_CoSTIC2026.doc"
+                        href="/templates/exemple_CoSTIC2026.docx"
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={async () => {
                           try {
                             await addDoc(collection(db, 'templateDownloads'), {
                               format: 'docx',
-                              path: '/templates/exemple_CoSTIC2026.doc',
+                              path: '/templates/exemple_CoSTIC2026.docx',
                               userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
                               downloadedAt: serverTimestamp()
                             });
