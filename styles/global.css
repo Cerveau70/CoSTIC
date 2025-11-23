@@ -1,3 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 /* Styles globaux pour garantir la cohérence des couleurs entre navigateurs */
 
 /* Reset des couleurs pour éviter les variations entre navigateurs */

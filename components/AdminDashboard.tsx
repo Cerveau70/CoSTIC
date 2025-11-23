@@ -115,7 +115,8 @@ const AdminDashboard: React.FC = () => {
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      second: '2-digit'
     });
   };
 
@@ -222,10 +223,13 @@ const AdminDashboard: React.FC = () => {
                 <table className="min-w-full divide-y divide-neutral-200">
                   <thead className="bg-neutral-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Auteur</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Titre</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Thématique</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Date</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Nom</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Email</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Affiliation</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Titre de l'article</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Track/Thématique</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Fichier PDF</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Heure de soumission</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
@@ -233,11 +237,13 @@ const AdminDashboard: React.FC = () => {
                     {submissions.map((submission) => (
                       <tr key={submission.id} className="hover:bg-neutral-50">
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div>
-                            <div className="text-sm font-medium text-neutral-900">{submission.authorName}</div>
-                            <div className="text-sm text-neutral-500">{submission.authorEmail}</div>
-                            <div className="text-sm text-neutral-500">{submission.affiliation}</div>
-                          </div>
+                          <div className="text-sm font-medium text-neutral-900">{submission.authorName}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-neutral-500">{submission.authorEmail}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-neutral-500">{submission.affiliation || 'N/A'}</div>
                         </td>
                         <td className="px-6 py-4">
                           <div className="text-sm text-neutral-900 max-w-xs truncate" title={submission.articleTitle}>
@@ -248,6 +254,11 @@ const AdminDashboard: React.FC = () => {
                           <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-secondary/10 text-secondary">
                             {submission.themeSelect || 'Non spécifié'}
                           </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-neutral-700 max-w-xs truncate" title={submission.fileName}>
+                            {submission.fileName}
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
                           {formatDate(submission.submittedAt)}

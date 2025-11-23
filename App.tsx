@@ -202,12 +202,15 @@ const budgetItems = [
 
 const App: React.FC = () => {
   const initialSubmissionState = {
-    authorName: '', authorEmail: '', affiliation: '', articleTitle: '', themeSelect: '',
+    authorName: '', affiliation: '', articleTitle: '', themeSelect: '',
   };
   const [submission, setSubmission] = useState(initialSubmissionState);
   const [file, setFile] = useState<File | null>(null);
   const [submissionStatus, setSubmissionStatus] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [emailInput, setEmailInput] = useState('');
+  const [emailError, setEmailError] = useState('');
 
   const initialRegistrationState = {
     name: '', email: '', participantType: 'chercheur',
@@ -295,30 +298,51 @@ const App: React.FC = () => {
     e.preventDefault();
     setSubmissionStatus('');
 
-    if (!submission.authorName || !submission.authorEmail || !submission.articleTitle || !file) {
+    // Vérifier les champs obligatoires (sans email)
+    if (!submission.authorName || !submission.articleTitle || !file) {
       setSubmissionStatus('Erreur : Veuillez remplir tous les champs obligatoires et sélectionner un fichier.');
       return;
     }
+    
+    // Afficher la modal pour demander l'email
+    setShowEmailModal(true);
+    setEmailInput('');
+    setEmailError('');
+  };
+
+  const handleEmailModalSubmit = async () => {
+    // Valider l'email
+    const error = validateEmail(emailInput);
+    if (error) {
+      setEmailError(error);
+      return;
+    }
+
+    setEmailError('');
     setIsSubmitting(true);
+    setShowEmailModal(false);
+
     try {
       // 1. Upload file to Firebase Storage
-      const storageRef = ref(storage, `submissions/${Date.now()}_${file.name}`);
-      await uploadBytes(storageRef, file);
+      const storageRef = ref(storage, `submissions/${Date.now()}_${file!.name}`);
+      await uploadBytes(storageRef, file!);
 
       // 2. Get file URL
       const downloadURL = await getDownloadURL(storageRef);
 
-      // 3. Save submission data to Firestore
+      // 3. Save submission data to Firestore avec l'email
       await addDoc(collection(db, "submissions"), {
         ...submission,
+        authorEmail: emailInput,
         fileUrl: downloadURL,
-        fileName: file.name,
+        fileName: file!.name,
         submittedAt: serverTimestamp()
       });
 
       setSubmissionStatus('Succès : Votre article a été soumis avec succès !');
       setSubmission(initialSubmissionState);
       setFile(null);
+      setEmailInput('');
       // Clear file input
       const fileInput = document.getElementById('fileUpload') as HTMLInputElement;
       if (fileInput) fileInput.value = "";
@@ -329,6 +353,12 @@ const App: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleEmailModalCancel = () => {
+    setShowEmailModal(false);
+    setEmailInput('');
+    setEmailError('');
   };
 
   // Configuration des prix
@@ -893,10 +923,6 @@ const App: React.FC = () => {
                         <input type="text" id="authorName" value={submission.authorName} onChange={handleSubmissionChange} className={baseInputStyle} required disabled={isSubmitting} />
                       </div>
                       <div>
-                        <label htmlFor="authorEmail" className={labelStyle}>{t('label_author_email')}</label>
-                        <input type="email" id="authorEmail" value={submission.authorEmail} onChange={handleSubmissionChange} className={baseInputStyle} required disabled={isSubmitting} />
-                      </div>
-                      <div>
                         <label htmlFor="affiliation" className={labelStyle}>{t('label_affiliation')}</label>
                         <input type="text" id="affiliation" value={submission.affiliation} onChange={handleSubmissionChange} className={baseInputStyle} disabled={isSubmitting} />
                       </div>
@@ -929,6 +955,51 @@ const App: React.FC = () => {
                       {submissionStatus && <p className={`mt-4 text-center text-sm ${submissionStatus.startsWith('Erreur') || submissionStatus.startsWith('Error') ? 'text-red-600' : 'text-green-600'}`}>{submissionStatus}</p>}
                     </div>
                   </form>
+
+                  {/* Modal pour demander l'email */}
+                  {showEmailModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                      <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4">
+                        <h3 className="text-2xl font-bold text-primary mb-4 font-sans">Veuillez entrer votre email</h3>
+                        <div className="mb-6">
+                          <label htmlFor="emailModal" className={labelStyle}>Email de l'auteur*</label>
+                          <input
+                            type="email"
+                            id="emailModal"
+                            value={emailInput}
+                            onChange={(e) => {
+                              setEmailInput(e.target.value);
+                              if (emailError) setEmailError('');
+                            }}
+                            className={`${baseInputStyle} ${emailError ? 'border-red-500 focus:ring-red-500' : ''}`}
+                            placeholder="exemple@email.com"
+                            autoFocus
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter') {
+                                handleEmailModalSubmit();
+                              }
+                            }}
+                          />
+                          {emailError && <p className="text-red-600 text-sm mt-1">{emailError}</p>}
+                        </div>
+                        <div className="flex space-x-4">
+                          <button
+                            onClick={handleEmailModalCancel}
+                            className="flex-1 px-6 py-3 border border-neutral-300 rounded-lg text-neutral-700 hover:bg-neutral-50 transition-colors duration-200 font-sans font-semibold"
+                          >
+                            Annuler
+                          </button>
+                          <button
+                            onClick={handleEmailModalSubmit}
+                            className="flex-1 px-6 py-3 rounded-lg text-white hover:opacity-90 transition-colors duration-200 font-sans font-semibold"
+                            style={{ backgroundColor: '#0D47A1', color: '#ffffff' }}
+                          >
+                            Valider
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </Animated>
             </div>

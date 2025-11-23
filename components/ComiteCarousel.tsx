@@ -12,7 +12,7 @@ interface ComiteMember {
 const comiteScientifique: ComiteMember[] = [
   // Président
   {
-    nom: "Prof. Coulibaly Adama",
+    nom: "Prof. COULIBALY Adama",
     affiliation: "Université Félix Houphouët-Boigny",
     pays: "Côte d'Ivoire",
     drapeau: "🇨🇮",
@@ -21,7 +21,7 @@ const comiteScientifique: ComiteMember[] = [
   },
   // Vice-Président
   {
-    nom: "Prof. Asseu Olivier",
+    nom: "Prof. ASSEU Olivier",
     affiliation: "MESRS / ESATIC",
     pays: "Côte d'Ivoire",
     drapeau: "🇨🇮",
@@ -30,7 +30,7 @@ const comiteScientifique: ComiteMember[] = [
   },
   //Membres - Côte d'Ivoire
   {
-    nom: "Prof. Oumtanaga Souleymane",
+    nom: "Prof. OUMTANAGA Souleymane",
     affiliation: "INP-HB",
     pays: "Côte d'Ivoire",
     drapeau: "🇨🇮",
@@ -46,7 +46,7 @@ const comiteScientifique: ComiteMember[] = [
     titre: "Professeur"
   },
   {
-    nom: "Prof. Claude Lishou",
+    nom: "Prof. CLAUDE Lishou",
     affiliation: "UCAD",
     pays: "Sénégal",
     drapeau: "🇸🇳",
@@ -54,7 +54,7 @@ const comiteScientifique: ComiteMember[] = [
     titre: "Professeur"
   },
   {
-    nom: "Dr(MC) Soro Étienne",
+    nom: "Dr(MC) SORO Étienne",
     affiliation: "ESATIC",
     pays: "Côte d'Ivoire",
     drapeau: "🇨🇮",
@@ -62,7 +62,7 @@ const comiteScientifique: ComiteMember[] = [
     titre: "Docteur"
   },
   {
-    nom: "Dr(MC) Moustapha Diaby",
+    nom: "Dr(MC) MOUSTAPHA Diaby",
     affiliation: "ESATIC",
     pays: "Côte d'Ivoire",
     drapeau: "🇨🇮",
@@ -70,7 +70,7 @@ const comiteScientifique: ComiteMember[] = [
     titre: "Rapporteur Général"
   },
   {
-    nom: "Dr(MC) Kamagaté Beman",
+    nom: "Dr(MC) KAMAGATÉ Beman",
     affiliation: "ESATIC",
     pays: "Côte d'Ivoire",
     drapeau: "🇨🇮",
@@ -79,7 +79,7 @@ const comiteScientifique: ComiteMember[] = [
   },
 
   {
-    nom: "Dr(MC) Mamadou Diarra",
+    nom: "Dr(MC) MAMADOU Diarra",
     affiliation: "UFHB",
     pays: "Côte d'Ivoire",
     drapeau: "🇨🇮",
@@ -87,7 +87,7 @@ const comiteScientifique: ComiteMember[] = [
     titre: "Docteur"
   },
   {
-    nom: "Dr(MC) bamba Aliou",
+    nom: "Dr(MC) BAMBA Aliou",
     affiliation: "AIGF",
     pays: "Côte d'Ivoire",
     drapeau: "🇨🇮",
@@ -103,7 +103,7 @@ const comiteScientifique: ComiteMember[] = [
     titre: "Docteur"
   },
   {
-    nom: "Dr Nabongo DIABATE",
+    nom: "Dr NABONGO DIABATE",
     affiliation: "UAO",
     pays: "Côte d'Ivoire",
     drapeau: "🇨🇮",
@@ -112,7 +112,7 @@ const comiteScientifique: ComiteMember[] = [
   },
 
   {
-    nom: "Dr(MC) Sere Aboulaye",
+    nom: "Dr(MC) SERE Aboulaye",
     affiliation: "Université Nazi Boni",
     pays: "Burkina Faso",
     drapeau: "🇧🇫",
@@ -120,7 +120,7 @@ const comiteScientifique: ComiteMember[] = [
     titre: "Docteur"
   },
   {
-    nom: "Dr(MC) Eyouléki Tcheyi Gnadi",
+    nom: "Dr(MC) EYOULEKI Tcheyi Gnadi",
     affiliation: "Université de Lomé",
     pays: "Togo",
     drapeau: "🇹🇬",
@@ -129,7 +129,7 @@ const comiteScientifique: ComiteMember[] = [
   },
   // Afrique
   {
-    nom: "Prof. Babacar",
+    nom: "Prof. BABACAR Ndiaye",
     affiliation: "Université Cheikh Anta Diop (UCAD)",
     pays: "Sénégal",
     drapeau: "🇸🇳",
@@ -137,7 +137,7 @@ const comiteScientifique: ComiteMember[] = [
     titre: "Professeur"
   },
   {
-    nom: "Prof. Leila Nasraoui",
+    nom: "Prof. LEILA Nasraoui",
     affiliation: "Université de Tunis El Manar",
     pays: "Tunisie",
     drapeau: "🇹🇳",
@@ -146,7 +146,7 @@ const comiteScientifique: ComiteMember[] = [
   },
   // Europe
   {
-    nom: "Prof. Yvon Kermarec",
+    nom: "Prof. YVON Kermarec",
     affiliation: "Institut Mines-Télécom (IMT)",
     pays: "France",
     drapeau: "🇫🇷",
